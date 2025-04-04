@@ -1,1 +1,3 @@
 # GradLink
+
+## Cada uno teneis que instalaros PostgreSQL, crear la bd gradlink y añadir el .env con usuario contra...

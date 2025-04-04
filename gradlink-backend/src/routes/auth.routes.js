@@ -1,6 +1,7 @@
 import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { authenticateToken } from "../middlewares/auth.middleware.js";
 
 const authRoutes = (dataSource) => {
   const router = express.Router();
@@ -49,6 +50,19 @@ const authRoutes = (dataSource) => {
         name: user.name,
         role: user.role,
       },
+    });
+  });
+
+  // Ruta protegida: /me
+  router.get("/me", authenticateToken, async (req, res) => {
+    const user = await userRepo.findOneBy({ id: req.user.id });
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    res.json({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
     });
   });
 
