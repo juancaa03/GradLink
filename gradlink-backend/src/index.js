@@ -1,22 +1,36 @@
-import express from 'express';
+import "dotenv/config";
+import "reflect-metadata";
+import express from "express";
+import cors from "cors";
+import { DataSource } from "typeorm";
 
-require("dotenv").config();
-const cors = require("cors");
-const { DataSource } = require("typeorm"); // Para crear conexión con la base de datos
-const express = require("express");
+import authRoutes from "./routes/auth.routes.js"; // Importamos rutas como módulos ES
 
 const app = express();
 const PORT = process.env.PORT || 4000;
 
+// Middlewares
 app.use(cors());
 app.use(express.json());
 
-// app.use("/api/users", require("./routes/user.routes"))
+// Conexión a PostgreSQL vía TypeORM
+const dataSource = new DataSource((await import("../ormconfig.js")).default);
 
-app.get('/', (req, res) => {
-  res.json("Gradlink API is running 🚀")
-})
+dataSource.initialize().then(() => {
+  console.log("📦 Connected to PostgreSQL via TypeORM");
 
-app.listen(port, () => {
-    console.log(`🚀 Backend running on http://localhost:${PORT}`)
-})
+  // Rutas
+  app.use("/api/auth", authRoutes(dataSource));
+
+  // Ruta base de prueba
+  app.get("/", (req, res) => {
+    res.send("GradLink API is running 🚀");
+  });
+
+  // Arrancar servidor
+  app.listen(PORT, () => {
+    console.log(`🚀 Backend running on http://localhost:${PORT}`);
+  });
+}).catch((err) => {
+  console.error("❌ Error connecting to DB", err);
+});
