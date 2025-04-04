@@ -1,9 +1,8 @@
 
-# GradLink 💼🎓
+# GradLink
 
 
-> [!IMPORTANT] 
-> IMPORTANTE CHAVALES!!!
+> [!IMPORTANTE CHAVALES!!!] 
 > Teneis que hacer esto como setup:
 
 1. Instalar PostgreSQL en su PC
@@ -51,5 +50,5 @@
 
 ---
 
-> .[!IMPORTANT]. 
+> .[!ESTO TAMGBIEN]. 
 > ANTES DE TOCAR CODIGO PROBAR EXACTAMENTE LO MISMO, HASTA QUE NO OS FUNCIONE PERF NO METAIS CODIGO QUE SINO LIADA
