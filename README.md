@@ -2,7 +2,7 @@
 # GradLink 💼🎓
 
 
-> .[!IMPORTANT]. 
+> [!IMPORTANT] 
 > IMPORTANTE CHAVALES!!!
 > Teneis que hacer esto como setup:
 
