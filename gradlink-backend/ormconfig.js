@@ -1,4 +1,6 @@
 import { User } from "./src/entities/User.js";
+import { Service } from "./src/entities/Service.js";
+import { Tag } from "./src/entities/Tag.js";
 
 export default {
   type: "postgres",
@@ -9,5 +11,5 @@ export default {
   database: process.env.DB_DATABASE,
   synchronize: true,
   logging: false,
-  entities: [User],
+  entities: [User, Service, Tag],
 };

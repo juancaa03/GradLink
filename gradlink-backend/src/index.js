@@ -4,7 +4,8 @@ import express from "express";
 import cors from "cors";
 import { DataSource } from "typeorm";
 
-import authRoutes from "./routes/auth.routes.js"; // Importamos rutas como módulos ES
+import authRoutes from "./routes/auth.routes.js";
+import serviceRoutes from "./routes/service.routes.js";
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -21,6 +22,7 @@ dataSource.initialize().then(() => {
 
   // Rutas
   app.use("/api/auth", authRoutes(dataSource));
+  app.use("/api/services", serviceRoutes(dataSource));
 
   // Ruta base de prueba
   app.get("/", (req, res) => {
