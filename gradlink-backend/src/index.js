@@ -6,6 +6,8 @@ import { DataSource } from "typeorm";
 
 import authRoutes from "./routes/auth.routes.js";
 import serviceRoutes from "./routes/service.routes.js";
+import orderRoutes from "./routes/order.routes.js";
+import { authenticateToken } from "./middlewares/auth.middleware.js";
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -23,6 +25,7 @@ dataSource.initialize().then(() => {
   // Rutas
   app.use("/api/auth", authRoutes(dataSource));
   app.use("/api/services", serviceRoutes(dataSource));
+  app.use("/api/orders", authenticateToken, orderRoutes(dataSource));
 
   // Ruta base de prueba
   app.get("/", (req, res) => {
