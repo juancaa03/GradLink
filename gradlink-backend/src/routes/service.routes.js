@@ -35,8 +35,13 @@ const serviceRoutes = (dataSource) => {
       .leftJoinAndSelect("service.tags", "tag");
 
     if (q) {
-      query.andWhere("LOWER(service.title) LIKE :q", { q: `%${q.toLowerCase()}%` });
+      const lowerQ = `%${q.toLowerCase()}%`;
+      query.andWhere(
+        `(LOWER(service.title) LIKE :q OR LOWER(tag.name) LIKE :q)`,
+        { q: lowerQ }
+      );
     }
+      
 
     if (tags) {
       const tagList = tags.split(",").map((t) => t.trim().toLowerCase());
@@ -49,12 +54,29 @@ const serviceRoutes = (dataSource) => {
     res.json(results);
   });
 
+  // Obtener todos los servicios del usuario autenticado
+  router.get("/my-services", authenticateToken, async (req, res) => {
+    try {
+      const user = await dataSource.getRepository("User").findOneBy({ id: req.user.id });
+        
+      if (!user) return res.status(404).json({ error: "Usuario no encontrado" });
+  
+      const services = await serviceRepo.find({
+        where: { user: { id: user.id } },
+        relations: ["tags"], // incluye las etiquetas si las usas
+      });  
+      res.json(services);
+    } catch (err) {
+      console.error("Error al obtener los servicios del usuario:", err);
+      res.status(500).json({ error: "Error interno del servidor" });
+    }
+  });
+  
   router.get("/:id", async (req, res) => {
     const service = await serviceRepo.findOneBy({ id: parseInt(req.params.id) });
     if (!service) return res.status(404).json({ error: "Service not found" });
     res.json(service);
   });
-
   return router;
 };
 

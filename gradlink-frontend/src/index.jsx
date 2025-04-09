@@ -4,6 +4,9 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./ProtectedRoute";
+import ServiceDetails from "./pages/ServiceDetails";
+import CreateService from "./pages/CreateService";
+import MyServices from "./pages/MyServices";
 
 // Puedes mover esto a un `routes.js` más adelante si crece
 const AppRouter = () => {
@@ -24,6 +27,30 @@ const AppRouter = () => {
         element={
           <ProtectedRoute allowedRoles={["admin"]}>
             <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/service/:id"
+        element={
+          <ProtectedRoute>
+            <ServiceDetails />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/create-service"
+        element={
+          <ProtectedRoute allowedRoles={["student", "dev", "admin"]}>
+            <CreateService />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/my-services"
+        element={
+          <ProtectedRoute>
+            <MyServices />
           </ProtectedRoute>
         }
       />

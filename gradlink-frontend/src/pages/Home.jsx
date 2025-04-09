@@ -1,15 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   AppBar,
   Toolbar,
   Typography,
-  Button,
   IconButton,
   InputBase,
   Box,
   Container,
-  Paper,
+  Card,
+  CardContent,
+  Button,
 } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import SearchIcon from "@mui/icons-material/Search";
@@ -50,8 +51,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const Home = () => {
-  const { logout, user } = useAuth();
+  const { logout, user, token } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
+  const [services, setServices] = useState([]);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -59,10 +61,66 @@ const Home = () => {
     navigate("/login");
   };
 
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
-    // aquí podrías hacer un fetch en tiempo real si quieres
+  
+  useEffect(() => {
+    const fetchAllServices = async () => {
+      try {
+        const res = await fetch("http://localhost:4000/api/services", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!res.ok) throw new Error("Error cargando servicios");
+        const data = await res.json();
+        setServices(data);
+      } catch (err) {
+        console.error(err.message);
+      }
+    };
+
+    fetchAllServices();
+  }, [token]);
+
+  const handleSearchChange = async (e) => {
+    const query = e.target.value;
+    setSearchTerm(query);
+  
+    if (query.length < 2) {
+      // Volver a mostrar todos los servicios
+      try {
+        const res = await fetch("http://localhost:4000/api/services", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!res.ok) throw new Error("Error cargando servicios");
+        const data = await res.json();
+        setServices(data);
+      } catch (err) {
+        console.error(err.message);
+      }
+      return;
+    }
+  
+    try {
+      const res = await fetch(
+        `http://localhost:4000/api/services?q=${encodeURIComponent(query)}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+  
+      if (!res.ok) throw new Error("Error buscando servicios");
+  
+      const data = await res.json();
+      setServices(data);
+    } catch (err) {
+      console.error(err.message);
+    }
   };
+  
 
   return (
     <>
@@ -89,17 +147,72 @@ const Home = () => {
       </AppBar>
 
       <Container sx={{ mt: 4 }}>
-        <Typography variant="h5" gutterBottom>
-          Bienvenido, {user?.name || "usuario"} 👋
-        </Typography>
-
-        {/* Resultados de búsqueda o servicios */}
-        <Paper sx={{ p: 3 }}>
-          <Typography variant="body1">
-            Aquí irán los resultados de búsqueda para: <b>{searchTerm}</b>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 3,
+            flexWrap: "wrap",
+            gap: 2,
+          }}
+        >
+          <Typography variant="h5">
+            Bienvenido, {user?.name || "usuario"} 👋
           </Typography>
-          {/* Puedes mapear los servicios aquí más adelante */}
-        </Paper>
+
+          <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
+            <Button
+              variant="outlined"
+              onClick={() =>
+                window.open(`${window.location.origin}/create-service`, "_blank")
+              }
+            >
+              + Publicar nuevo servicio
+            </Button>
+
+            <Button
+              variant="outlined"
+              onClick={() => navigate("/my-services")}
+            >
+              Mis servicios
+            </Button>
+          </Box>
+
+        </Box>
+
+        {searchTerm && (
+          <Typography variant="subtitle1" sx={{ mb: 2 }}>
+            Resultados para: <b>{searchTerm}</b>
+          </Typography>
+        )}
+
+        {services.length === 0 && searchTerm ? (
+          <Typography variant="body2">No se encontraron servicios.</Typography>
+        ) : (
+          <Box
+            sx={{
+              display: "grid",
+              gap: 2,
+              gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+            }}
+          >
+            {services.map((service) => (
+              <Card
+                key={service.id}
+                sx={{ p: 2, cursor: "pointer" }}
+                onClick={() => navigate(`/service/${service.id}`)}
+              >
+                <CardContent>
+                  <Typography variant="h6">{service.title}</Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {service.description}
+                  </Typography>
+                </CardContent>
+              </Card>
+            ))}
+          </Box>
+        )}
       </Container>
     </>
   );
