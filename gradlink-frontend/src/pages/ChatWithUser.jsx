@@ -39,7 +39,7 @@ const ChatWithUser = () => {
     };
 
     markAsRead();
-  }, [userId, token]);
+  }, [userId, token, setHasUnread]);
 
   // 2. Obtener mensajes
   useEffect(() => {
