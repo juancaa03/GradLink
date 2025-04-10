@@ -65,7 +65,11 @@ const messageRoutes = (dataSource) => {
         }
       }
   
-      res.json(Array.from(conversationMap.values()));
+      res.json(
+        Array.from(conversationMap.values()).sort((a, b) =>
+          new Date(b.timestamp) - new Date(a.timestamp)
+        )
+      );
     } catch (err) {
       console.error(err.message);
       res.status(500).json({ error: "Error obteniendo conversaciones" });
