@@ -13,6 +13,8 @@ import {
   Button,
 } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
+import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
+import MarkChatUnreadOutlinedIcon from '@mui/icons-material/MarkChatUnreadOutlined';
 import SearchIcon from "@mui/icons-material/Search";
 import { styled, alpha } from "@mui/material/styles";
 import { useAuth } from "../context/AuthContext";
@@ -51,7 +53,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const Home = () => {
-  const { logout, user, token } = useAuth();
+  const { logout, user, token, hasUnread, setHasUnread } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const [services, setServices] = useState([]);
   const navigate = useNavigate();
@@ -61,7 +63,33 @@ const Home = () => {
     navigate("/login");
   };
 
+  useEffect(() => {
+    const checkUnread = async () => {
+      try {
+        const res = await fetch("http://localhost:4000/api/messages/has-unread", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!res.ok) throw new Error("Error al verificar mensajes");
+        const data = await res.json();
+        setHasUnread(data.hasUnread);
+      } catch (err) {
+        console.error(err.message);
+      }
+    };
   
+    checkUnread();
+  
+    const handleFocus = () => checkUnread();
+    window.addEventListener("focus", handleFocus);
+  
+    return () => {
+      window.removeEventListener("focus", handleFocus);
+    };
+  }, [token, setHasUnread]);
+  
+
   useEffect(() => {
     const fetchAllServices = async () => {
       try {
@@ -142,6 +170,9 @@ const Home = () => {
           </Search>
           <IconButton color="inherit" onClick={handleLogout}>
             <LogoutIcon />
+          </IconButton>
+          <IconButton color="inherit" onClick={() => navigate("/conversations")}>
+            {hasUnread ? <MarkChatUnreadOutlinedIcon /> : <ChatBubbleOutlineIcon />}
           </IconButton>
         </Toolbar>
       </AppBar>

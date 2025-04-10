@@ -106,9 +106,7 @@ const ServiceDetails = () => {
                 variant="contained"
                 color="primary"
                 sx={{ mt: 3 }}
-                onClick={() => {
-                console.log(`Contactar con usuario ID: ${service.user.id}`);
-                }}
+                onClick={() => navigate(`/chat/${service.user.id}`, { state: { serviceId: service.id } })}
             >
                 Contactar
             </Button>

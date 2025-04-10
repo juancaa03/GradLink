@@ -8,6 +8,7 @@ export const AuthProvider = ({ children }) => {
     const saved = localStorage.getItem("user");
     return saved ? JSON.parse(saved) : null;
   });
+  const [hasUnread, setHasUnread] = useState(false);
 
   const login = ({ token, user }) => {
     setToken(token);
@@ -23,7 +24,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ token, user, login, logout }}>
+    <AuthContext.Provider value={{ token, user, login, logout, hasUnread, setHasUnread }}>
       {children}
     </AuthContext.Provider>
   );

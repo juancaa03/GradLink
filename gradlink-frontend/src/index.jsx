@@ -8,6 +8,8 @@ import ServiceDetails from "./pages/ServiceDetails";
 import CreateService from "./pages/CreateService";
 import MyServices from "./pages/MyServices";
 import EditService from "./pages/EditService";
+import ChatWithUser from "./pages/ChatWithUser";
+import Conversations from "./pages/Conversations.jsx";
 
 // Puedes mover esto a un `routes.js` más adelante si crece
 const AppRouter = () => {
@@ -64,6 +66,25 @@ const AppRouter = () => {
           </ProtectedRoute>
         }
       />
+
+      <Route
+        path="/chat/:userId"
+        element={
+          <ProtectedRoute>
+            <ChatWithUser />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/conversations"
+        element={
+          <ProtectedRoute>
+            <Conversations />
+          </ProtectedRoute>
+        }
+      />
+
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
