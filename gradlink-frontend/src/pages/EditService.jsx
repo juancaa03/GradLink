@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import {
   Container,
@@ -10,22 +11,51 @@ import {
   Chip,
   Stack,
   IconButton,
+  CircularProgress,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 
-const CreateService = () => {
+const EditService = () => {
+  const { id } = useParams();
   const { token } = useAuth();
   const navigate = useNavigate();
 
+  const [loading, setLoading] = useState(true);
   const [form, setForm] = useState({
     title: "",
     description: "",
     price: "",
     tags: [],
   });
-
   const [newTag, setNewTag] = useState("");
+
+  useEffect(() => {
+    const fetchService = async () => {
+      try {
+        const res = await fetch(`http://localhost:4000/api/services/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!res.ok) throw new Error("Error al cargar el servicio");
+
+        const data = await res.json();
+        setForm({
+          title: data.title,
+          description: data.description,
+          price: data.price,
+          tags: data.tags || [],
+        });
+      } catch (err) {
+        alert("Error al cargar datos del servicio");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchService();
+  }, [id, token]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -50,8 +80,8 @@ const CreateService = () => {
     e.preventDefault();
 
     try {
-      const res = await fetch("http://localhost:4000/api/services", {
-        method: "POST",
+      const res = await fetch(`http://localhost:4000/api/services/${id}`, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -62,21 +92,33 @@ const CreateService = () => {
         }),
       });
 
-      if (!res.ok) throw new Error("Error al crear el servicio");
+      if (!res.ok) throw new Error("Error al actualizar el servicio");
 
-      const data = await res.json();
-      alert("Servicio publicado con éxito");
-      navigate(`/service/${data.id}`);
+      const updated = await res.json();
+      alert("Servicio actualizado correctamente");
+      navigate(`/service/${updated.id}`, { replace: true });
     } catch (err) {
       alert(err.message);
     }
   };
 
+  if (loading) {
+    return (
+      <Box sx={{ mt: 10, display: "flex", justifyContent: "center" }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
   return (
     <Container maxWidth="sm" sx={{ mt: 6 }}>
       <Paper sx={{ p: 4, borderRadius: 3 }}>
+        <Button variant="outlined" onClick={() => navigate("/my-services")} sx={{ mb: 2 }}>
+            ← Volver a mis servicios
+        </Button>
+        
         <Typography variant="h5" gutterBottom>
-          Publicar un nuevo servicio
+          Editar servicio
         </Typography>
 
         <Box
@@ -141,28 +183,13 @@ const CreateService = () => {
             </Box>
           </Box>
 
-          <Box sx={{ display: "flex", gap: 2 }}>
-            <Button variant="contained" color="primary" type="submit">
-                Publicar servicio
-            </Button>
-            <Button
-                variant="outlined"
-                color="error"
-                onClick={() => {
-                if (confirm("¿Seguro que quieres cancelar la creación?")) {
-                    const closed = window.close();
-                    if (!closed) navigate("/");
-                }
-                }}
-            >
-                Cancelar
-            </Button>
-          </Box>
-
+          <Button variant="contained" color="primary" type="submit">
+            Guardar cambios
+          </Button>
         </Box>
       </Paper>
     </Container>
   );
 };
 
-export default CreateService;
+export default EditService;

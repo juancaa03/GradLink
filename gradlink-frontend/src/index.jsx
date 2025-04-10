@@ -7,6 +7,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import ServiceDetails from "./pages/ServiceDetails";
 import CreateService from "./pages/CreateService";
 import MyServices from "./pages/MyServices";
+import EditService from "./pages/EditService";
 
 // Puedes mover esto a un `routes.js` más adelante si crece
 const AppRouter = () => {
@@ -51,6 +52,15 @@ const AppRouter = () => {
         element={
           <ProtectedRoute>
             <MyServices />
+          </ProtectedRoute>
+        }
+      />
+      
+      <Route
+        path="/edit-service/:id"
+        element={
+          <ProtectedRoute>
+            <EditService />
           </ProtectedRoute>
         }
       />

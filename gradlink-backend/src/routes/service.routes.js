@@ -71,6 +71,44 @@ const serviceRoutes = (dataSource) => {
       res.status(500).json({ error: "Error interno del servidor" });
     }
   });
+
+  // Actualizar un servicio existente
+  router.put("/:id", authenticateToken, async (req, res) => {
+    const { title, description, price, tags = [] } = req.body;
+    const serviceId = parseInt(req.params.id);
+
+    const service = await serviceRepo.findOne({
+      where: { id: serviceId },
+      relations: ["user", "tags"],
+    });
+
+    if (!service) return res.status(404).json({ error: "Servicio no encontrado" });
+
+    // Asegurarse de que el usuario autenticado es el dueño
+    if (service.user.id !== req.user.id) {
+      return res.status(403).json({ error: "No autorizado para editar este servicio" });
+    }
+
+    // Actualizar campos
+    service.title = title;
+    service.description = description;
+    service.price = price;
+
+    // Procesar etiquetas
+    const processedTags = [];
+    for (const tag of tags) {
+      const name = tag.name.toLowerCase().trim();
+      let existing = await tagRepo.findOneBy({ name });
+      if (!existing) existing = await tagRepo.save({ name });
+      processedTags.push(existing);
+    }
+
+    service.tags = processedTags;
+
+    const updated = await serviceRepo.save(service);
+    res.json(updated);
+  });
+
   
   router.get("/:id", async (req, res) => {
     const service = await serviceRepo.findOneBy({ id: parseInt(req.params.id) });
