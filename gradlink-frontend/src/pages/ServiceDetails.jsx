@@ -60,6 +60,24 @@ const ServiceDetails = () => {
     );
   }
 
+  const handleAddToCart = async () => {
+    try {
+      const res = await fetch("http://localhost:4000/api/cart/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ serviceId: service.id }),
+      });
+      if (!res.ok) throw new Error("Error al añadir al carrito");
+      alert("Servicio añadido al carrito");
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+  
+
   return (
     <Container sx={{ mt: 5, mb: 4 }}>
       <Button variant="outlined" onClick={() => navigate(-1)} sx={{ mb: 3 }}>
@@ -78,41 +96,50 @@ const ServiceDetails = () => {
         <Divider sx={{ my: 2 }} />
 
         <Typography variant="body1" sx={{ whiteSpace: "pre-line", mb: 2 }}>
-            {service.description}
+          {service.description}
         </Typography>
 
         <Typography variant="subtitle1" gutterBottom>
-            Precio:{" "}
-            {service.price && !isNaN(parseFloat(service.price))
-                ? `${parseFloat(service.price).toFixed(2)} €`
-                : "No indicado"}
+          Precio:{" "}
+          {service.price && !isNaN(parseFloat(service.price))
+            ? `${parseFloat(service.price).toFixed(2)} €`
+            : "No indicado"}
         </Typography>
 
-
         {service.tags?.length > 0 && (
-            <Box sx={{ mt: 2 }}>
-                <Typography variant="subtitle1">Etiquetas:</Typography>
-                <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap", mt: 1 }}>
-                    {service.tags.map((tag) => (
-                        <Chip key={tag.id || tag.name} label={tag.name} />
-                    ))}
-                </Box>
+          <Box sx={{ mt: 2 }}>
+            <Typography variant="subtitle1">Etiquetas:</Typography>
+            <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap", mt: 1 }}>
+              {service.tags.map((tag) => (
+                <Chip key={tag.id || tag.name} label={tag.name} />
+              ))}
             </Box>
+          </Box>
         )}
-
 
         {user.id !== service.user?.id && (
+          <Box sx={{ display: "flex", gap: 2, mt: 3 }}>
             <Button
-                variant="contained"
-                color="primary"
-                sx={{ mt: 3 }}
-                onClick={() => navigate(`/chat/${service.user.id}`, { state: { serviceId: service.id } })}
+              variant="contained"
+              color="primary"
+              onClick={() =>
+                navigate(`/chat/${service.user.id}`, {
+                  state: { serviceId: service.id },
+                })
+              }
             >
-                Contactar
+              Contactar
             </Button>
+
+            <Button
+              variant="outlined"
+              color="success"
+              onClick={handleAddToCart}
+            >
+              Añadir al carrito
+            </Button>
+          </Box>
         )}
-
-
       </Paper>
     </Container>
   );

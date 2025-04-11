@@ -8,6 +8,7 @@ import authRoutes from "./routes/auth.routes.js";
 import serviceRoutes from "./routes/service.routes.js";
 import orderRoutes from "./routes/order.routes.js";
 import messageRoutes from "./routes/message.routes.js";
+import cartRoutes from "./routes/cart.routes.js";
 import { authenticateToken } from "./middlewares/auth.middleware.js";
 
 const app = express();
@@ -28,6 +29,7 @@ dataSource.initialize().then(() => {
   app.use("/api/services", serviceRoutes(dataSource));
   app.use("/api/orders", authenticateToken, orderRoutes(dataSource));
   app.use("/api/messages", messageRoutes(dataSource));
+  app.use("/api/cart", cartRoutes(dataSource));
   
 
   // Ruta base de prueba

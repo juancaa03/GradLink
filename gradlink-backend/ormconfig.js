@@ -3,6 +3,7 @@ import { Service } from "./src/entities/Service.js";
 import { Tag } from "./src/entities/Tag.js";
 import { Order } from "./src/entities/Order.js";
 import { Message } from "./src/entities/Message.js";
+import { CartItem } from "./src/entities/CartItem.js";
 
 export default {
   type: "postgres",
@@ -12,5 +13,5 @@ export default {
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
   logging: false,
-  entities: [User, Service, Tag, Order, Message],
+  entities: [User, Service, Tag, Order, Message, CartItem],
 };

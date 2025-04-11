@@ -10,6 +10,7 @@ import MyServices from "./pages/MyServices";
 import EditService from "./pages/EditService";
 import ChatWithUser from "./pages/ChatWithUser";
 import Conversations from "./pages/Conversations.jsx";
+import CartPage from "./pages/CartPage.jsx";
 
 // Puedes mover esto a un `routes.js` más adelante si crece
 const AppRouter = () => {
@@ -81,6 +82,15 @@ const AppRouter = () => {
         element={
           <ProtectedRoute>
             <Conversations />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/cart"
+        element={
+          <ProtectedRoute>
+            <CartPage />
           </ProtectedRoute>
         }
       />

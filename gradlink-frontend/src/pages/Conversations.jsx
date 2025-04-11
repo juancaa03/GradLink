@@ -11,9 +11,12 @@ import {
   Button,
   Badge,
   Box,
+  IconButton,
+  Tooltip,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 const Conversations = () => {
   const { token } = useAuth();
@@ -45,6 +48,27 @@ const Conversations = () => {
     fetchConversations();
   }, [token]);
 
+  const handleDelete = async (userId) => {
+    const confirmDelete = confirm("¿Seguro que quieres borrar esta conversación?");
+    if (!confirmDelete) return;
+
+    try {
+      const res = await fetch(`http://localhost:4000/api/messages/with/${userId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!res.ok) throw new Error("Error al borrar conversación");
+
+      setConversations((prev) => prev.filter((c) => c.user.id !== userId));
+    } catch (err) {
+      alert("No se pudo borrar la conversación");
+      console.error(err);
+    }
+  };
+
   if (loading) {
     return (
       <Container sx={{ mt: 10, display: "flex", justifyContent: "center" }}>
@@ -69,27 +93,58 @@ const Conversations = () => {
           <List>
             {conversations.map((conv, index) => (
               <div key={conv.user.id}>
-                <ListItemButton onClick={() => navigate(`/chat/${conv.user.id}`)}>
-                    <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
-                        <ListItemText
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    px: 1,
+                    py: 0.5,
+                  }}
+                >
+                  <ListItemButton
+                    sx={{ flex: 1 }}
+                    onClick={() => navigate(`/chat/${conv.user.id}`)}
+                  >
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        width: "100%",
+                      }}
+                    >
+                      <ListItemText
                         primary={conv.user.name}
                         secondary={conv.lastMessage}
-                        />
-                        {conv.hasUnread && (
+                      />
+                      {conv.hasUnread && (
                         <Badge
-                            color="error"
-                            variant="dot"
-                            sx={{
+                          color="error"
+                          variant="dot"
+                          sx={{
                             "& .MuiBadge-badge": {
-                                right: 0,
-                                top: "50%",
-                                transform: "translateY(-50%)",
+                              right: 0,
+                              top: "50%",
+                              transform: "translateY(-50%)",
                             },
-                            }}
+                          }}
                         />
-                        )}
+                      )}
                     </Box>
-                </ListItemButton>
+                  </ListItemButton>
+
+                  <Tooltip title="Borrar conversación">
+                    <IconButton
+                      onClick={() => handleDelete(conv.user.id)}
+                      size="small"
+                      edge="end"
+                      sx={{ ml: 1 }}
+                    >
+                      <DeleteOutlineIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
 
                 {index < conversations.length - 1 && <Divider />}
               </div>

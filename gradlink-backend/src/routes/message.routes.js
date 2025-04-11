@@ -137,6 +137,28 @@ const messageRoutes = (dataSource) => {
     }
   });
 
+  router.delete("/with/:userId", authenticateToken, async (req, res) => {
+    const { userId } = req.params;
+  
+    try {
+      const result = await dataSource
+        .getRepository("Message")
+        .createQueryBuilder()
+        .delete()
+        .where(
+          "(senderId = :me AND receiverId = :other) OR (senderId = :other AND receiverId = :me)",
+          { me: req.user.id, other: parseInt(userId) }
+        )
+        .execute();
+  
+      res.json({ deleted: result.affected });
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).json({ error: "Error al borrar la conversación" });
+    }
+  });
+  
+
   return router;
 };
 

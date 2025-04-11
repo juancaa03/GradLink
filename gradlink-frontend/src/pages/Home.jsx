@@ -11,11 +11,13 @@ import {
   Card,
   CardContent,
   Button,
+  Badge,
 } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import MarkChatUnreadOutlinedIcon from '@mui/icons-material/MarkChatUnreadOutlined';
 import SearchIcon from "@mui/icons-material/Search";
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { styled, alpha } from "@mui/material/styles";
 import { useAuth } from "../context/AuthContext";
 
@@ -56,6 +58,7 @@ const Home = () => {
   const { logout, user, token, hasUnread, setHasUnread } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const [services, setServices] = useState([]);
+  const [cartCount, setCartCount] = useState(0);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -78,17 +81,35 @@ const Home = () => {
         console.error(err.message);
       }
     };
-  
+
     checkUnread();
-  
+
     const handleFocus = () => checkUnread();
     window.addEventListener("focus", handleFocus);
-  
+
     return () => {
       window.removeEventListener("focus", handleFocus);
     };
   }, [token, setHasUnread]);
-  
+
+  useEffect(() => {
+    const fetchCartCount = async () => {
+      try {
+        const res = await fetch("http://localhost:4000/api/cart", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!res.ok) throw new Error("Error al obtener carrito");
+        const data = await res.json();
+        setCartCount(data.length);
+      } catch (err) {
+        console.error(err.message);
+      }
+    };
+
+    fetchCartCount();
+  }, [token]);
 
   useEffect(() => {
     const fetchAllServices = async () => {
@@ -112,9 +133,8 @@ const Home = () => {
   const handleSearchChange = async (e) => {
     const query = e.target.value;
     setSearchTerm(query);
-  
+
     if (query.length < 2) {
-      // Volver a mostrar todos los servicios
       try {
         const res = await fetch("http://localhost:4000/api/services", {
           headers: {
@@ -129,7 +149,7 @@ const Home = () => {
       }
       return;
     }
-  
+
     try {
       const res = await fetch(
         `http://localhost:4000/api/services?q=${encodeURIComponent(query)}`,
@@ -139,16 +159,15 @@ const Home = () => {
           },
         }
       );
-  
+
       if (!res.ok) throw new Error("Error buscando servicios");
-  
+
       const data = await res.json();
       setServices(data);
     } catch (err) {
       console.error(err.message);
     }
   };
-  
 
   return (
     <>
@@ -171,8 +190,13 @@ const Home = () => {
           <IconButton color="inherit" onClick={handleLogout}>
             <LogoutIcon />
           </IconButton>
-          <IconButton color="inherit" onClick={() => navigate("/conversations")}>
-            {hasUnread ? <MarkChatUnreadOutlinedIcon /> : <ChatBubbleOutlineIcon />}
+          <IconButton color="inherit" onClick={() => navigate("/conversations")}> 
+            {hasUnread ? <MarkChatUnreadOutlinedIcon /> : <ChatBubbleOutlineIcon />} 
+          </IconButton>
+          <IconButton color="inherit" onClick={() => navigate("/cart")}>
+            <Badge badgeContent={cartCount} color="error">
+              <ShoppingCartIcon />
+            </Badge>
           </IconButton>
         </Toolbar>
       </AppBar>
@@ -209,7 +233,6 @@ const Home = () => {
               Mis servicios
             </Button>
           </Box>
-
         </Box>
 
         {searchTerm && (
