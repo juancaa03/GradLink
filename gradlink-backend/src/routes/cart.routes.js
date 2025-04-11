@@ -1,10 +1,14 @@
 import express from "express";
+import Stripe from "stripe";
 import { authenticateToken } from "../middlewares/auth.middleware.js";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const cartRoutes = (dataSource) => {
   const router = express.Router();
   const cartRepo = dataSource.getRepository("CartItem");
   const serviceRepo = dataSource.getRepository("Service");
+  const userRepo = dataSource.getRepository("User");
 
   // Obtener carrito del usuario actual
   router.get("/", authenticateToken, async (req, res) => {
@@ -106,6 +110,45 @@ const cartRoutes = (dataSource) => {
     }
   });
 
+  router.post("/checkout", authenticateToken, async (req, res) => {
+    try {
+      const cartItems = await cartRepo.find({
+        where: { user: { id: req.user.id } },
+        relations: ["service"],
+      });
+
+      if (cartItems.length === 0) {
+        return res.status(400).json({ error: "Tu carrito está vacío" });
+      }
+
+      const lineItems = cartItems.map((item) => ({
+        price_data: {
+          currency: "eur",
+          product_data: {
+            name: item.service.title,
+          },
+          unit_amount: Math.round(parseFloat(item.service.price) * 100),
+        },
+        quantity: 1,
+      }));
+
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        line_items: lineItems,
+        mode: "payment",
+        success_url: `${process.env.FRONTEND_URL}/success`,
+        cancel_url: `${process.env.FRONTEND_URL}/cart`,
+        metadata: {
+          userId: req.user.id.toString(),
+        },
+      });
+
+      res.json({ url: session.url });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Error iniciando el checkout" });
+    }
+  });
 
   return router;
 };
