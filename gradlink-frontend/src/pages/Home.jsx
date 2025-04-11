@@ -12,12 +12,15 @@ import {
   CardContent,
   Button,
   Badge,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
-import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
-import MarkChatUnreadOutlinedIcon from '@mui/icons-material/MarkChatUnreadOutlined';
+import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
+import MarkChatUnreadOutlinedIcon from "@mui/icons-material/MarkChatUnreadOutlined";
 import SearchIcon from "@mui/icons-material/Search";
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import AccountCircle from "@mui/icons-material/AccountCircle";
 import { styled, alpha } from "@mui/material/styles";
 import { useAuth } from "../context/AuthContext";
 
@@ -59,11 +62,20 @@ const Home = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [services, setServices] = useState([]);
   const [cartCount, setCartCount] = useState(0);
+  const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
     navigate("/login");
+  };
+
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
   };
 
   useEffect(() => {
@@ -187,17 +199,30 @@ const Home = () => {
               onChange={handleSearchChange}
             />
           </Search>
-          <IconButton color="inherit" onClick={handleLogout}>
-            <LogoutIcon />
-          </IconButton>
-          <IconButton color="inherit" onClick={() => navigate("/conversations")}> 
-            {hasUnread ? <MarkChatUnreadOutlinedIcon /> : <ChatBubbleOutlineIcon />} 
+          <IconButton color="inherit" onClick={() => navigate("/conversations")}>
+            {hasUnread ? <MarkChatUnreadOutlinedIcon /> : <ChatBubbleOutlineIcon />}
           </IconButton>
           <IconButton color="inherit" onClick={() => navigate("/cart")}>
             <Badge badgeContent={cartCount} color="error">
               <ShoppingCartIcon />
             </Badge>
           </IconButton>
+          <IconButton color="inherit" onClick={handleMenuOpen}>
+            <AccountCircle />
+          </IconButton>
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleMenuClose}
+          >
+            <MenuItem onClick={() => { handleMenuClose(); navigate("/profile"); }}>
+              Perfil
+            </MenuItem>
+            <MenuItem onClick={() => { handleMenuClose(); navigate("/orders"); }}>
+              Mis compras
+            </MenuItem>
+            <MenuItem onClick={handleLogout}>Cerrar sesión</MenuItem>
+          </Menu>
         </Toolbar>
       </AppBar>
 

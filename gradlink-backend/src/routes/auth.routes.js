@@ -48,6 +48,7 @@ const authRoutes = (dataSource) => {
       user: {
         id: user.id,
         name: user.name,
+        email: user.email,
         role: user.role,
       },
     });
@@ -65,6 +66,30 @@ const authRoutes = (dataSource) => {
       role: user.role,
     });
   });
+
+  router.put("/me", authenticateToken, async (req, res) => {
+    const { name, password } = req.body;
+    const userRepo = dataSource.getRepository("User");
+
+    try {
+      const user = await userRepo.findOneBy({ id: req.user.id });
+      if (!user) return res.status(404).json({ error: "Usuario no encontrado" });
+
+      if (name) user.name = name;
+      if (password) {
+        const hashed = await bcrypt.hash(password, 10);
+        user.password = hashed;
+      }
+
+      await userRepo.save(user);
+
+      res.json({ message: "Perfil actualizado correctamente" });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Error al actualizar el perfil" });
+    }
+  });
+
 
   return router;
 };
