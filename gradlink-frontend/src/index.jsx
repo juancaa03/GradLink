@@ -11,6 +11,7 @@ import EditService from "./pages/EditService";
 import ChatWithUser from "./pages/ChatWithUser";
 import Conversations from "./pages/Conversations.jsx";
 import CartPage from "./pages/CartPage.jsx";
+import SuccessPage from "./pages/SuccessPage.jsx";
 
 // Puedes mover esto a un `routes.js` más adelante si crece
 const AppRouter = () => {
@@ -91,6 +92,15 @@ const AppRouter = () => {
         element={
           <ProtectedRoute>
             <CartPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/success"
+        element={
+          <ProtectedRoute>
+            <SuccessPage />
           </ProtectedRoute>
         }
       />

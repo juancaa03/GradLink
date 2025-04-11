@@ -122,3 +122,8 @@ Se puede hacer la consulta de muchas formas:
   ```
   GET /api/services?q=web&tags=html,programación
   ```
+
+Tarjeta de prueba funcionamiento correcto española(los demas datos que sean validos pero inventados):
+  4000 0072 4000 0007
+
+![No aceptadas](./stripe-cards.png)

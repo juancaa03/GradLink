@@ -1,8 +1,11 @@
 import express from "express";
+import { authenticateToken } from "../middlewares/auth.middleware.js";
 
 const orderRoutes = (dataSource) => {
   const router = express.Router();
   const orderRepo = dataSource.getRepository("Order");
+  const cartRepo = dataSource.getRepository("CartItem");
+  const userRepo = dataSource.getRepository("User");
 
   // Crear nuevo pedido
   router.post("/", async (req, res) => {
@@ -50,6 +53,38 @@ const orderRoutes = (dataSource) => {
     order.status = status;
     await orderRepo.save(order);
     res.json({ message: "Estado actualizado", order });
+  });
+
+    // Confirmar pedido y guardar orden después de Stripe
+  router.post("/confirm", authenticateToken, async (req, res) => {
+    try {
+      const user = await userRepo.findOneBy({ id: req.user.id });
+      const cartItems = await cartRepo.find({
+        where: { user: { id: user.id } },
+        relations: ["service"],
+      });
+  
+      if (!cartItems.length) {
+        return res.status(400).json({ error: "El carrito está vacío" });
+      }
+  
+      for (const item of cartItems) {
+        const order = orderRepo.create({
+          user,
+          service: item.service,
+          status: "processing",
+        });
+        await orderRepo.save(order);
+      }
+  
+      // Vaciar carrito después de la compra
+      await cartRepo.remove(cartItems);
+  
+      res.status(201).json({ message: "Compra completada" });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Error al confirmar la compra" });
+    }
   });
 
   return router;
