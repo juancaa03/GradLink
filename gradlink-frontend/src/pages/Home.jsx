@@ -183,7 +183,7 @@ const Home = () => {
 
   return (
     <>
-      <AppBar position="static">
+      <AppBar position="static" sx={{ backgroundColor: "#11294d", color: "#fdf5e7" }}>
         <Toolbar>
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
             GradLink
@@ -279,11 +279,21 @@ const Home = () => {
             {services.map((service) => (
               <Card
                 key={service.id}
-                sx={{ p: 2, cursor: "pointer" }}
+                sx={{
+                  backgroundColor: "#fcfaf5",
+                  borderRadius: 2,
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+                  p: 2,
+                  cursor: "pointer",
+                  transition: "all 0.2s ease-in-out",
+                  "&:hover": {
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                  },
+                }}
                 onClick={() => navigate(`/service/${service.id}`)}
               >
                 <CardContent>
-                  <Typography variant="h6">{service.title}</Typography>
+                  <Typography variant="h6" color="#11294d">{service.title}</Typography>
                   <Typography variant="body2" color="text.secondary">
                     {service.description}
                   </Typography>
