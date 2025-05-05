@@ -16,6 +16,8 @@ import {
   MenuItem,
 } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
+import Avatar from "@mui/material/Avatar";
+import Chip from "@mui/material/Chip";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import MarkChatUnreadOutlinedIcon from "@mui/icons-material/MarkChatUnreadOutlined";
 import SearchIcon from "@mui/icons-material/Search";
@@ -237,8 +239,9 @@ const Home = () => {
             gap: 2,
           }}
         >
-          <Typography variant="h5">
-            Bienvenido, {user?.name || "usuario"} 👋
+          <Typography variant="h5" 
+          sx={{ fontWeight: 'bold', color: '#11294d' }}>
+            Bienvenido, {user?.name || "usuario"}!
           </Typography>
 
           <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
@@ -280,26 +283,70 @@ const Home = () => {
               <Card
                 key={service.id}
                 sx={{
-                  backgroundColor: "#fcfaf5",
-                  borderRadius: 2,
-                  boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+                  backgroundColor: "#fdf5e7",
+                  borderRadius: 3,
+                  border: "1px solid #d0d7de",
                   p: 2,
-                  cursor: "pointer",
+                  minWidth: 250,
                   transition: "all 0.2s ease-in-out",
+                  cursor: "pointer",
                   "&:hover": {
-                    boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
+                    transform: "translateY(-2px)",
                   },
                 }}
                 onClick={() => navigate(`/service/${service.id}`)}
               >
-                <CardContent>
-                  <Typography variant="h6" color="#11294d">{service.title}</Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {service.description}
+                <CardContent sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                  <Box display="flex" alignItems="center" gap={1}>
+                    <Avatar sx={{ bgcolor: "#4c7f8a", width: 32, height: 32, fontSize: 16 }}>
+                      {service.user.name[0]}
+                    </Avatar>
+                    <Typography variant="subtitle2" color="text.secondary">
+                      {service.user.name}
+                    </Typography>
+                  </Box>
+
+                  <Typography variant="h6" fontWeight={600} color="#11284b">
+                    {service.title}
+                  </Typography>
+
+                  <Box mt={1} display="flex" alignItems="baseline" gap={1}>
+                    <Typography variant="h5" fontWeight={700} color="#11284b">
+                      ${parseFloat(service.price).toFixed(2)}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      desde
+                    </Typography>
+                  </Box>
+
+                  <Box mt={1} display="flex" flexWrap="wrap" gap={0.5}>
+                    {service.tags.map((tag, i) => (
+                      <Chip
+                        key={i}
+                        label={tag.name}
+                        size="small"
+                        variant="filled"
+                        sx={{
+                          fontSize: 10,
+                          fontWeight: 500,
+                          px: 0.75,
+                          py: 0.25,
+                          borderRadius: "999px",
+                          backgroundColor: "#e6eaf3", // fondo suave
+                          color: "#11284b",           // texto más oscuro
+                        }}
+                      />
+                    ))}
+                  </Box>
+
+                  <Typography variant="caption" color="text.secondary" mt={1}>
+                    Publicado el {new Date(service.createdAt).toLocaleDateString()}
                   </Typography>
                 </CardContent>
               </Card>
             ))}
+
           </Box>
         )}
       </Container>
