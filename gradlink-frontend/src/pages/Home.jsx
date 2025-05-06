@@ -28,7 +28,7 @@ import { useAuth } from "../context/AuthContext";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
-  borderRadius: theme.shape.borderRadius,
+  borderRadius: "99px",
   backgroundColor: alpha(theme.palette.common.black, 0.05),
   "&:hover": {
     backgroundColor: alpha(theme.palette.common.black, 0.1),
@@ -185,50 +185,72 @@ const Home = () => {
 
   return (
     <>
-      <AppBar position="static" sx={{ backgroundColor: "#11294d", color: "#fdf5e7" }}>
-        <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            GradLink
-          </Typography>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Buscar servicios…"
-              inputProps={{ "aria-label": "search" }}
-              value={searchTerm}
-              onChange={handleSearchChange}
-            />
-          </Search>
-          <IconButton color="inherit" onClick={() => navigate("/conversations")}>
-            {hasUnread ? <MarkChatUnreadOutlinedIcon /> : <ChatBubbleOutlineIcon />}
-          </IconButton>
-          <IconButton color="inherit" onClick={() => navigate("/cart")}>
-            <Badge badgeContent={cartCount} color="error">
-              <ShoppingCartIcon />
-            </Badge>
-          </IconButton>
-          <IconButton color="inherit" onClick={handleMenuOpen}>
-            <AccountCircle />
-          </IconButton>
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleMenuClose}
-          >
-            <MenuItem onClick={() => { handleMenuClose(); navigate("/profile"); }}>
-              Perfil
-            </MenuItem>
-            <MenuItem onClick={() => { handleMenuClose(); navigate("/orders"); }}>
-              Mis compras
-            </MenuItem>
-            <MenuItem onClick={handleLogout}>Cerrar sesión</MenuItem>
-          </Menu>
+      <AppBar
+        position="fixed"
+        elevation={4}
+        sx={{
+          top: 16,
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: "90%",
+          maxWidth: 960,
+          backgroundImage: "linear-gradient(to right, #2c3e50, #bdc3c7)",
+          color: "#fdf5e7",
+          borderRadius: "99px",
+          padding: "0.25rem 1rem",
+          backdropFilter: "blur(10px)",
+          boxShadow: "0 8px 32px rgba(0, 0, 0, 0.25)",
+        }}>
+        <Toolbar sx={{ position: "relative", minHeight: "56px" }}>
+          {/* Sección izquierda */}
+          <Box sx={{ flexGrow: 1, display: "flex", alignItems: "center" }}>
+            <Typography variant="h6" noWrap>
+              GradLink
+            </Typography>
+          </Box>
+
+          {/* Sección central: Buscador */}
+          <Box sx={{ position: "absolute", left: "50%", transform: "translateX(-50%)", width: "50%" }}>
+            <Search>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <StyledInputBase
+                placeholder="Buscar servicios…"
+                inputProps={{ "aria-label": "search" }}
+                value={searchTerm}
+                onChange={handleSearchChange}
+              />
+            </Search>
+          </Box>
+
+          {/* Sección derecha: iconos */}
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <IconButton color="inherit" onClick={() => navigate("/conversations")}>
+              {hasUnread ? <MarkChatUnreadOutlinedIcon /> : <ChatBubbleOutlineIcon />}
+            </IconButton>
+            <IconButton color="inherit" onClick={() => navigate("/cart")}>
+              <Badge badgeContent={cartCount} color="error">
+                <ShoppingCartIcon />
+              </Badge>
+            </IconButton>
+            <IconButton color="inherit" onClick={handleMenuOpen}>
+              <AccountCircle />
+            </IconButton>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleMenuClose}
+            >
+              <MenuItem onClick={() => { handleMenuClose(); navigate("/profile"); }}>Perfil</MenuItem>
+              <MenuItem onClick={() => { handleMenuClose(); navigate("/orders"); }}>Mis compras</MenuItem>
+              <MenuItem onClick={handleLogout}>Cerrar sesión</MenuItem>
+            </Menu>
+          </Box>
         </Toolbar>
       </AppBar>
 
-      <Container sx={{ mt: 4 }}>
+      <Container sx={{ mt: 4, paddingTop: "96px" }}>
         <Box
           sx={{
             display: "flex",
@@ -240,23 +262,41 @@ const Home = () => {
           }}
         >
           <Typography variant="h5" 
-          sx={{ fontWeight: 'bold', color: '#11294d' }}>
+          sx={{ fontWeight: 'bold', color: '#f0f4f8', }}>
             Bienvenido, {user?.name || "usuario"}!
           </Typography>
 
-          <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
+          <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", color: "#f1ebe3" }}>
             <Button
-              variant="outlined"
+              color="#f1ebe3"
               onClick={() =>
                 window.open(`${window.location.origin}/create-service`, "_blank")
               }
+              sx={{
+                backgroundColor: "rgba(0, 0, 0, 0.4)",
+                borderRadius: "99px",
+                padding: "0.5rem 1rem",
+                '&:hover': {
+                  backgroundColor: "#4c7f8a",
+                  color: "#11294d",
+                }
+              }}
             >
-              + Publicar nuevo servicio
-            </Button>
+              + Nuevo servicio
+            </Button> 
 
             <Button
-              variant="outlined"
+              color="#11294d"
               onClick={() => navigate("/my-services")}
+              sx={{
+                backgroundColor: "rgba(0, 0, 0, 0.4)",
+                borderRadius: "99px",
+                padding: "0.5rem 1rem",
+                '&:hover': {
+                  backgroundColor: "#11294d",
+                  color: "#c6d4dc",
+                }
+              }}
             >
               Mis servicios
             </Button>
@@ -283,16 +323,19 @@ const Home = () => {
               <Card
                 key={service.id}
                 sx={{
-                  backgroundColor: "#fdf5e7",
-                  borderRadius: 3,
-                  border: "1px solid #d0d7de",
+                  background: "rgba(0, 0, 0, 0.4)",
+                  backdropFilter: "blur(12px)",
+                  borderRadius: "16px",
+                  border: "1px solid rgba(255, 255, 255, 0.15)",
+                  color: "#dbe6f3",
                   p: 2,
                   minWidth: 250,
-                  transition: "all 0.2s ease-in-out",
+                  transition: "all 0.3s ease-in-out",
                   cursor: "pointer",
+                  boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
                   "&:hover": {
-                    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
-                    transform: "translateY(-2px)",
+                    boxShadow: "0 6px 40px rgba(0, 0, 0, 0.25)",
+                    transform: "translateY(-4px)",
                   },
                 }}
                 onClick={() => navigate(`/service/${service.id}`)}
@@ -302,21 +345,21 @@ const Home = () => {
                     <Avatar sx={{ bgcolor: "#4c7f8a", width: 32, height: 32, fontSize: 16 }}>
                       {service.user.name[0]}
                     </Avatar>
-                    <Typography variant="subtitle2" color="text.secondary">
+                    <Typography variant="subtitle2" color="dbe6f3">
                       {service.user.name}
                     </Typography>
                   </Box>
 
-                  <Typography variant="h6" fontWeight={600} color="#11284b">
+                  <Typography variant="h6" fontWeight={600} color="#dbe6f3">
                     {service.title}
                   </Typography>
 
                   <Box mt={1} display="flex" alignItems="baseline" gap={1}>
-                    <Typography variant="h5" fontWeight={700} color="#11284b">
-                      ${parseFloat(service.price).toFixed(2)}
-                    </Typography>
-                    <Typography variant="caption" color="text.secondary">
+                    <Typography variant="caption" color="dbe6f3">
                       desde
+                    </Typography>
+                    <Typography variant="h5" fontWeight={700} color="#dbe6f3">
+                      ${parseFloat(service.price).toFixed(2)}
                     </Typography>
                   </Box>
 
@@ -340,7 +383,7 @@ const Home = () => {
                     ))}
                   </Box>
 
-                  <Typography variant="caption" color="text.secondary" mt={1}>
+                  <Typography variant="caption" color="dbe6f3" mt={1}>
                     Publicado el {new Date(service.createdAt).toLocaleDateString()}
                   </Typography>
                 </CardContent>
