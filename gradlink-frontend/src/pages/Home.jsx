@@ -286,12 +286,12 @@ const Home = () => {
                 borderRadius: "99px",
                 padding: "0.5rem 1rem",
                 '&:hover': {
-                  backgroundColor: "#4c7f8a",
-                  color: "#11294d",
+                  backgroundColor: "#f1ebe3",
+                  color: "rgba(0, 0, 0, 0.4)",
                 }
               }}
             >
-              + Nuevo servicio
+            +
             </Button> 
 
             <Button
@@ -302,8 +302,8 @@ const Home = () => {
                 borderRadius: "99px",
                 padding: "0.5rem 1rem",
                 '&:hover': {
-                  backgroundColor: "#11294d",
-                  color: "#c6d4dc",
+                  backgroundColor: "#f1ebe3",
+                  color: "rgba(0, 0, 0, 0.4)",
                 }
               }}
             >
@@ -341,60 +341,73 @@ const Home = () => {
                   minWidth: 250,
                   transition: "all 0.3s ease-in-out",
                   cursor: "pointer",
-                  boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+                  boxShadow: "0 4px 30px rgba(255, 255, 255, 0.1)",
                   "&:hover": {
-                    boxShadow: "0 6px 40px rgba(0, 0, 0, 0.25)",
+                    boxShadow: "0 6px 40px rgba(255, 255, 255, 0.3)",
                     transform: "translateY(-4px)",
                   },
                 }}
                 onClick={() => navigate(`/service/${service.id}`)}
               >
                 <CardContent sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                  {/* Usuario alineado a la izquierda */}
                   <Box display="flex" alignItems="center" gap={1}>
                     <Avatar sx={{ bgcolor: "#4c7f8a", width: 32, height: 32, fontSize: 16 }}>
                       {service.user.name[0]}
                     </Avatar>
-                    <Typography variant="subtitle2" color="dbe6f3">
+                    <Typography variant="subtitle2" color="#dbe6f3">
                       {service.user.name}
                     </Typography>
                   </Box>
 
-                  <Typography variant="h6" fontWeight={600} color="#dbe6f3">
-                    {service.title}
-                  </Typography>
-
-                  <Box mt={1} display="flex" alignItems="baseline" gap={1}>
-                    <Typography variant="caption" color="dbe6f3">
-                      desde
+                  {/* Contenido centrado */}
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      textAlign: "center",
+                      gap: 1,
+                      paddingTop: "10px",
+                    }}
+                  >
+                    <Typography variant="h6" fontWeight={600} color="#dbe6f3">
+                      {service.title}
                     </Typography>
-                    <Typography variant="h5" fontWeight={700} color="#dbe6f3">
-                      ${parseFloat(service.price).toFixed(2)}
+
+                    <Box mt={1} display="flex" alignItems="baseline" gap={1}>
+                      <Typography variant="caption" color="#dbe6f3">
+                        desde
+                      </Typography>
+                      <Typography variant="h5" fontWeight={700} color="#dbe6f3">
+                        ${parseFloat(service.price).toFixed(2)}
+                      </Typography>
+                    </Box>
+
+                    <Box mt={1} display="flex" flexWrap="wrap" gap={0.5} justifyContent="center">
+                      {service.tags.map((tag, i) => (
+                        <Chip
+                          key={i}
+                          label={tag.name}
+                          size="small"
+                          variant="filled"
+                          sx={{
+                            fontSize: 10,
+                            fontWeight: 500,
+                            px: 0.75,
+                            py: 0.25,
+                            borderRadius: "999px",
+                            backgroundColor: "#e6eaf3",
+                            color: "#11284b",
+                          }}
+                        />
+                      ))}
+                    </Box>
+
+                    <Typography variant="caption" color="#dbe6f3" mt={1}>
+                      Publicado el {new Date(service.createdAt).toLocaleDateString()}
                     </Typography>
                   </Box>
-
-                  <Box mt={1} display="flex" flexWrap="wrap" gap={0.5}>
-                    {service.tags.map((tag, i) => (
-                      <Chip
-                        key={i}
-                        label={tag.name}
-                        size="small"
-                        variant="filled"
-                        sx={{
-                          fontSize: 10,
-                          fontWeight: 500,
-                          px: 0.75,
-                          py: 0.25,
-                          borderRadius: "999px",
-                          backgroundColor: "#e6eaf3", // fondo suave
-                          color: "#11284b",           // texto más oscuro
-                        }}
-                      />
-                    ))}
-                  </Box>
-
-                  <Typography variant="caption" color="dbe6f3" mt={1}>
-                    Publicado el {new Date(service.createdAt).toLocaleDateString()}
-                  </Typography>
                 </CardContent>
               </Card>
             ))}
