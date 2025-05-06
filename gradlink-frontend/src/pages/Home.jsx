@@ -25,6 +25,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import { styled, alpha } from "@mui/material/styles";
 import { useAuth } from "../context/AuthContext";
+import logo from "../assets/Gradlink-logo-light-removebg.png";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -204,9 +205,17 @@ const Home = () => {
         <Toolbar sx={{ position: "relative", minHeight: "56px" }}>
           {/* Sección izquierda */}
           <Box sx={{ flexGrow: 1, display: "flex", alignItems: "center" }}>
-            <Typography variant="h6" noWrap>
-              GradLink
-            </Typography>
+            <Box
+              component="img"
+              src={logo}
+              alt="GradLink Logo"
+              sx={{
+                height: 48,
+                width: "auto",
+                objectFit: "contain",
+                cursor: "pointer",
+              }}
+            />
           </Box>
 
           {/* Sección central: Buscador */}
