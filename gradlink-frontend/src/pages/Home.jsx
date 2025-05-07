@@ -26,6 +26,7 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import { styled, alpha } from "@mui/material/styles";
 import { useAuth } from "../context/AuthContext";
 import logo from "../assets/Gradlink-logo-light-removebg.png";
+import "../../src/App.css"
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -324,35 +325,44 @@ const Home = () => {
           <Box
             sx={{
               display: "grid",
-              gap: 2,
-              gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+              gap: 1.5,
+              gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
             }}
           >
             {services.map((service) => (
               <Card
                 key={service.id}
                 sx={{
-                  background: "rgba(0, 0, 0, 0.4)",
-                  backdropFilter: "blur(12px)",
-                  borderRadius: "16px",
-                  border: "1px solid rgba(255, 255, 255, 0.15)",
-                  color: "#dbe6f3",
+                  background: `
+                    linear-gradient(
+                      to top,
+                      rgba(20, 28, 38, 0.9) 0%,
+                      rgba(30, 40, 55, 0.88) 40%,
+                      rgba(40, 52, 70, 0.85) 100%
+                    )
+                  `,
+                  backdropFilter: "blur(14px)",
+                  backgroundBlendMode: "lighten",
+                  borderRadius: "20px",
+                  border: "1px solid rgba(255, 255, 255, 0.08)",
+                  color: "#f1f4f8",
                   p: 2,
-                  minWidth: 250,
+                  maxWidth: 320,
                   transition: "all 0.3s ease-in-out",
                   cursor: "pointer",
-                  boxShadow: "0 4px 30px rgba(255, 255, 255, 0.1)",
+                  boxShadow: "0 6px 36px rgba(255, 255, 255, 0.08)",
                   "&:hover": {
-                    boxShadow: "0 6px 40px rgba(255, 255, 255, 0.3)",
+                    boxShadow: "0 8px 48px rgba(255, 255, 255, 0.2)",
                     transform: "translateY(-4px)",
                   },
                 }}
+                               
                 onClick={() => navigate(`/service/${service.id}`)}
               >
                 <CardContent sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
                   {/* Usuario alineado a la izquierda */}
                   <Box display="flex" alignItems="center" gap={1}>
-                    <Avatar sx={{ bgcolor: "#4c7f8a", width: 32, height: 32, fontSize: 16 }}>
+                    <Avatar sx={{ bgcolor: "#545d6a", width: 32, height: 32, fontSize: 16 }}>
                       {service.user.name[0]}
                     </Avatar>
                     <Typography variant="subtitle2" color="#dbe6f3">
@@ -397,8 +407,8 @@ const Home = () => {
                             px: 0.75,
                             py: 0.25,
                             borderRadius: "999px",
-                            backgroundColor: "#e6eaf3",
-                            color: "#11284b",
+                            backgroundColor: "#545d6a",
+                            color: "#dbe6f3",
                           }}
                         />
                       ))}
