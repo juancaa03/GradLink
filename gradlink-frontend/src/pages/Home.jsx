@@ -264,9 +264,9 @@ const Home = () => {
         <Typography variant="h4" 
           sx={{ fontWeight: 'bold', color: '#f0f4f8', textAlign: 'center', mb: 2, mt: 2 }}>
             Bienvenido,{" "}
-            <Box component="span" sx={{ color: '#168fff' }}>
-              {user?.name || "usuario"}!
-            </Box>
+          <Box component="span" sx={{ color: '#f0f4f8' }}>
+            {user?.name || "usuario"}!
+          </Box>
         </Typography>
         <Box
           sx={{
