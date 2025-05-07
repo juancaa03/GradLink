@@ -261,6 +261,13 @@ const Home = () => {
       </AppBar>
 
       <Container sx={{ mt: 4, paddingTop: "96px" }}>
+        <Typography variant="h4" 
+          sx={{ fontWeight: 'bold', color: '#f0f4f8', textAlign: 'center', mb: 2, mt: 2 }}>
+            Bienvenido,{" "}
+            <Box component="span" sx={{ color: '#168fff' }}>
+              {user?.name || "usuario"}!
+            </Box>
+        </Typography>
         <Box
           sx={{
             display: "flex",
@@ -271,11 +278,6 @@ const Home = () => {
             gap: 2,
           }}
         >
-          <Typography variant="h5" 
-          sx={{ fontWeight: 'bold', color: '#f0f4f8', }}>
-            Bienvenido, {user?.name || "usuario"}!
-          </Typography>
-
           <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", color: "#f1ebe3" }}>
             <Button
               color="#f1ebe3"
@@ -283,13 +285,28 @@ const Home = () => {
                 window.open(`${window.location.origin}/create-service`, "_blank")
               }
               sx={{
-                backgroundColor: "rgba(0, 0, 0, 0.4)",
+                background: `
+                linear-gradient(
+                  to top,
+                  rgba(20, 28, 38, 0.9) 0%,
+                  rgba(30, 40, 55, 0.88) 40%,
+                  rgba(40, 52, 70, 0.85) 100%
+                )
+                `,
+                backdropFilter: "blur(14px)",
+                backgroundBlendMode: "lighten",
                 borderRadius: "99px",
-                padding: "0.5rem 1rem",
-                '&:hover': {
-                  backgroundColor: "#f1ebe3",
-                  color: "rgba(0, 0, 0, 0.4)",
-                }
+                border: "1px solid rgba(255, 255, 255, 0.08)",
+                color: "#f1f4f8",
+                px: 1.7,
+                py: 0.5,
+                transition: "all 0.3s ease-in-out",
+                cursor: "pointer",
+                boxShadow: "0 6px 36px rgba(255, 255, 255, 0.08)",
+                "&:hover": {
+                  boxShadow: "0 8px 48px rgba(255, 255, 255, 0.2)",
+                  transform: "translateY(-2px)",
+                },
               }}
             >
             +
@@ -299,13 +316,28 @@ const Home = () => {
               color="#11294d"
               onClick={() => navigate("/my-services")}
               sx={{
-                backgroundColor: "rgba(0, 0, 0, 0.4)",
+                background: `
+                linear-gradient(
+                  to top,
+                  rgba(20, 28, 38, 0.9) 0%,
+                  rgba(30, 40, 55, 0.88) 40%,
+                  rgba(40, 52, 70, 0.85) 100%
+                )
+                `,
+                backdropFilter: "blur(14px)",
+                backgroundBlendMode: "lighten",
                 borderRadius: "99px",
-                padding: "0.5rem 1rem",
-                '&:hover': {
-                  backgroundColor: "#f1ebe3",
-                  color: "rgba(0, 0, 0, 0.4)",
-                }
+                border: "1px solid rgba(255, 255, 255, 0.08)",
+                color: "#f1f4f8",
+                px: 1.7,
+                py: 1,
+                transition: "all 0.3s ease-in-out",
+                cursor: "pointer",
+                boxShadow: "0 6px 36px rgba(255, 255, 255, 0.08)",
+                "&:hover": {
+                  boxShadow: "0 8px 48px rgba(255, 255, 255, 0.2)",
+                  transform: "translateY(-2px)",
+                },
               }}
             >
               Mis servicios
