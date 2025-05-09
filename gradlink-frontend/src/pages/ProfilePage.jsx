@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import {
@@ -15,12 +15,39 @@ const ProfilePage = () => {
   const { user, token, setUser } = useAuth();
   const navigate = useNavigate();
 
+  // Local state para el formulario
   const [name, setName] = useState(user?.name || "");
   const [email] = useState(user?.email || "");
-  const [role] = useState(user?.role || "");
+  const [institutionalEmail, setInstitutionalEmail] = useState(
+    user?.institutionalEmail || ""
+  );
+  const [role, setRole] = useState(user?.role || "");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState(null);
   const [error, setError] = useState(null);
+
+  // Función para volver a cargar el perfil desde /me
+  const fetchProfile = async () => {
+    try {
+      const res = await fetch(`http://localhost:4000/api/users/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) throw new Error("No pude recargar perfil");
+      const fresh = await res.json();
+      setUser(fresh);
+      setName(fresh.name);
+      setInstitutionalEmail(fresh.institutionalEmail || "");
+      setRole(fresh.role);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  // Opcional: recarga al montar el componente por si cambió rol en otro lado
+  useEffect(() => {
+    fetchProfile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleUpdate = async () => {
     const trimmedName = name.trim();
@@ -30,9 +57,11 @@ const ProfilePage = () => {
     }
 
     try {
+      // Construye payload
       const payload = { name: trimmedName };
-      if (password.trim()) {
-        payload.password = password.trim();
+      if (password.trim()) payload.password = password.trim();
+      if (institutionalEmail.trim()) {
+        payload.institutionalEmail = institutionalEmail.trim();
       }
 
       const res = await fetch(`http://localhost:4000/api/users/me`, {
@@ -44,19 +73,19 @@ const ProfilePage = () => {
         body: JSON.stringify(payload),
       });
 
-      if (!res.ok) throw new Error("Error al actualizar el perfil");
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Error al actualizar el perfil");
 
-      const updatedUser = { ...user, name: trimmedName };
-      localStorage.setItem("user", JSON.stringify(updatedUser));
-      setUser(updatedUser);
+      // Si todo ok, recarga perfil para actualizar rol y email verificado
+      await fetchProfile();
 
       setMessage("Perfil actualizado correctamente.");
       setError(null);
-      setPassword(""); // Limpiar el campo de contraseña tras actualizar
+      setPassword("");
     } catch (err) {
-      setMessage(null);
-      setError("Error al actualizar el perfil.");
       console.error(err);
+      setMessage(null);
+      setError(err.message);
     }
   };
 
@@ -92,6 +121,14 @@ const ProfilePage = () => {
             value={email}
             fullWidth
             disabled
+          />
+
+          <TextField
+            label="Correo institucional"
+            value={institutionalEmail}
+            onChange={(e) => setInstitutionalEmail(e.target.value)}
+            fullWidth
+            placeholder="usuario@institucion.edu"
           />
 
           <TextField label="Rol" value={role} fullWidth disabled />

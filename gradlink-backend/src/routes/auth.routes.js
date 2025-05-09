@@ -83,6 +83,8 @@ const authRoutes = (dataSource) => {
           id: savedUser.id,
           email: savedUser.email,
           name: savedUser.name,
+          institutionalEmail: user.institutionalEmail,
+          institutionalEmailVerified: user.institutionalEmailVerified,
           role: savedUser.role,
         },
       });
@@ -114,6 +116,8 @@ const authRoutes = (dataSource) => {
         id: user.id,
         name: user.name,
         email: user.email,
+        institutionalEmail: user.institutionalEmail,
+        institutionalEmailVerified: user.institutionalEmailVerified,
         role: user.role,
       },
     });
@@ -157,6 +161,8 @@ const authRoutes = (dataSource) => {
       id: user.id,
       name: user.name,
       email: user.email,
+      institutionalEmail: user.institutionalEmail,
+      institutionalEmailVerified: user.institutionalEmailVerified,
       role: user.role,
     });
   });
