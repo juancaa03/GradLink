@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   AppBar,
   Toolbar,
@@ -62,12 +62,31 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const Home = () => {
-  const { logout, user, token, hasUnread, setHasUnread } = useAuth();
+  const { logout, login, user, token, hasUnread, setHasUnread } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const [services, setServices] = useState([]);
   const [cartCount, setCartCount] = useState(0);
   const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    const newToken = searchParams.get("token");
+    if (newToken) {
+      fetch(`http://localhost:4000/api/auth/me`, {
+        headers: { Authorization: `Bearer ${newToken}` },
+      })
+        .then((res) => res.ok ? res.json() : Promise.reject("Failed to refresh"))
+        .then((freshUser) => {
+          login({ token: newToken, user: freshUser });
+          setSearchParams({}); // remove token from URL
+        })
+        .catch((err) => {
+          console.error("Error refreshing profile:", err);
+          navigate("/login");
+        });
+    }
+  }, []);
 
   const handleLogout = () => {
     logout();

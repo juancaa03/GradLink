@@ -55,7 +55,7 @@ const authRoutes = (dataSource) => {
           process.env.JWT_VERIF_SECRET,
           { expiresIn: "1d" }
         );
-        const verifyUrl = `${process.env.BACKEND_URL}/verify-institutional?token=${token}`;
+        const verifyUrl = `${process.env.BACKEND_URL}/api/auth/verify-institutional?token=${token}`;
 
         // Enviar correo
         const info = await transporter.sendMail({
@@ -141,10 +141,15 @@ const authRoutes = (dataSource) => {
       // Marcar verificado y asignar rol
       user.institutionalEmailVerified = true;
       user.role = "student";
+      const newToken = jwt.sign(
+        { id: user.id, role: user.role },
+        process.env.JWT_SECRET,
+        { expiresIn: "1d" }
+      );
       await userRepo.save(user);
 
       // Redirigir a tu frontend o mostrar mensaje
-      return res.redirect(`${process.env.FRONTEND_URL}/verified-success`);
+      return res.redirect(process.env.FRONTEND_URL);
     } catch (err) {
       console.error(err);
       return res.status(400).send("Token inválido o expirado.");
