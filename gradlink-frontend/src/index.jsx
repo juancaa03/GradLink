@@ -15,14 +15,13 @@ import SuccessPage from "./pages/SuccessPage.jsx";
 import OrdersPage from "./pages/OrdersPage.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
 
-// Puedes mover esto a un `routes.js` más adelante si crece
 const AppRouter = () => {
   return (
     <Routes>
       <Route
         path="/"
         element={
-          <ProtectedRoute allowedRoles={["student", "admin", "dev"]}>
+          <ProtectedRoute allowedRoles={["student", "admin", "client"]}>
             <Home />
           </ProtectedRoute>
         }

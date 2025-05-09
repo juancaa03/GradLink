@@ -13,3 +13,8 @@ Paleta de colores:
 --color-3: #4c7f8a; // acentos o estados
 --color-4: #f0c0a3; // detalles visuales suaves
 --color-5: #fdf5e7; // fondo base
+
+Migration commands:
+ npx typeorm migration:generate src/migrations/AddedStudentVerification --dataSource src/data-source.js --o
+
+ npx typeorm migration:run --dataSource src/data-source.js

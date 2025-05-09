@@ -16,12 +16,21 @@ export const User = new EntitySchema({
       type: "varchar",
       unique: true,
     },
+    institutionalEmail: {
+      type: "varchar",
+      unique: true,
+      nullable: true,
+    },
+    institutionalEmailVerified: {
+      type: "boolean",
+      default: false,
+    },
     password: {
       type: "varchar",
     },
     role: {
       type: "varchar", // student | client | admin
-      default: "student",
+      default: "client",
     },
     createdAt: {
       type: "timestamp",

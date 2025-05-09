@@ -19,6 +19,7 @@
     "express": "^5.1.0",
     "gradlink-backend": "file:",
     "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^7.0.3",
     "pg": "^8.14.1",
     "reflect-metadata": "^0.2.2",
     "stripe": "^18.0.0",
