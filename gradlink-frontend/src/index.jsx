@@ -55,7 +55,7 @@ const AppRouter = () => {
       <Route
         path="/my-services"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={["student", "dev", "admin"]}>
             <MyServices />
           </ProtectedRoute>
         }

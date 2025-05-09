@@ -55,7 +55,7 @@ const authRoutes = (dataSource) => {
           process.env.JWT_VERIF_SECRET,
           { expiresIn: "1d" }
         );
-        const verifyUrl = `${process.env.FRONTEND_URL}/verify-institutional?token=${token}`;
+        const verifyUrl = `${process.env.BACKEND_URL}/verify-institutional?token=${token}`;
 
         // Enviar correo
         const info = await transporter.sendMail({
@@ -83,8 +83,8 @@ const authRoutes = (dataSource) => {
           id: savedUser.id,
           email: savedUser.email,
           name: savedUser.name,
-          institutionalEmail: user.institutionalEmail,
-          institutionalEmailVerified: user.institutionalEmailVerified,
+          institutionalEmail: savedUser.institutionalEmail,
+          institutionalEmailVerified: savedUser.institutionalEmailVerified,
           role: savedUser.role,
         },
       });

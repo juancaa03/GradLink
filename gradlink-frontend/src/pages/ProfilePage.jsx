@@ -12,10 +12,10 @@ import {
 } from "@mui/material";
 
 const ProfilePage = () => {
-  const { user, token, setUser } = useAuth();
+  // Usamos login en lugar de setUser
+  const { user, token, login } = useAuth();
   const navigate = useNavigate();
 
-  // Local state para el formulario
   const [name, setName] = useState(user?.name || "");
   const [email] = useState(user?.email || "");
   const [institutionalEmail, setInstitutionalEmail] = useState(
@@ -26,24 +26,28 @@ const ProfilePage = () => {
   const [message, setMessage] = useState(null);
   const [error, setError] = useState(null);
 
-  // Función para volver a cargar el perfil desde /me
+  // Función para recargar el perfil desde /me
   const fetchProfile = async () => {
     try {
-      const res = await fetch(`http://localhost:4000/api/users/me`, {
+      const res = await fetch(`http://localhost:4000/api/auth/me`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!res.ok) throw new Error("No pude recargar perfil");
       const fresh = await res.json();
-      setUser(fresh);
+
+      // Actualizamos el contexto con el nuevo user (rol incluido)
+      login({ token, user: fresh });
+
+      // Y rellenamos los campos locales
       setName(fresh.name);
       setInstitutionalEmail(fresh.institutionalEmail || "");
       setRole(fresh.role);
     } catch (e) {
-      console.error(e);
+      console.error("Error al recargar perfil:", e);
     }
   };
 
-  // Opcional: recarga al montar el componente por si cambió rol en otro lado
+  // Al montar, recargamos el perfil por si cambió el rol
   useEffect(() => {
     fetchProfile();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -57,14 +61,13 @@ const ProfilePage = () => {
     }
 
     try {
-      // Construye payload
       const payload = { name: trimmedName };
       if (password.trim()) payload.password = password.trim();
       if (institutionalEmail.trim()) {
         payload.institutionalEmail = institutionalEmail.trim();
       }
 
-      const res = await fetch(`http://localhost:4000/api/users/me`, {
+      const res = await fetch(`http://localhost:4000/api/auth/me`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -76,14 +79,14 @@ const ProfilePage = () => {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Error al actualizar el perfil");
 
-      // Si todo ok, recarga perfil para actualizar rol y email verificado
+      // Tras actualizar, recargamos para pillar el nuevo rol y estado
       await fetchProfile();
 
       setMessage("Perfil actualizado correctamente.");
       setError(null);
       setPassword("");
     } catch (err) {
-      console.error(err);
+      console.error("Error al actualizar perfil:", err);
       setMessage(null);
       setError(err.message);
     }
