@@ -135,7 +135,7 @@ const authRoutes = (dataSource) => {
         return res.status(400).send("Usuario no válido.");
       }
       if (user.institutionalEmailVerified) {
-        return res.send("Ya has verificado tu correo institucional.");
+        return res.send("Ya has verificado tu correo institucional, Puedes cerrar esta ventana.");
       }
 
       // Marcar verificado y asignar rol
@@ -149,7 +149,8 @@ const authRoutes = (dataSource) => {
       await userRepo.save(user);
 
       // Redirigir a tu frontend o mostrar mensaje
-      return res.redirect(process.env.FRONTEND_URL);
+      //return res.redirect(process.env.FRONTEND_URL);
+      return res.send("Correo institucional verificado exitosamente. Ahora tienes el rol de estudiante.");
     } catch (err) {
       console.error(err);
       return res.status(400).send("Token inválido o expirado.");
