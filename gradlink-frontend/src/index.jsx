@@ -64,7 +64,7 @@ const AppRouter = () => {
       <Route
         path="/edit-service/:id"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={["student", "dev", "admin"]}>
             <EditService />
           </ProtectedRoute>
         }

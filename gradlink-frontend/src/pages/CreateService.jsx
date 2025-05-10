@@ -22,6 +22,7 @@ const CreateService = () => {
     title: "",
     description: "",
     price: "",
+    location: "",
     tags: [],
   });
 
@@ -109,6 +110,15 @@ const CreateService = () => {
             inputProps={{ step: "0.01", min: 0 }}
             required
           />
+          <TextField
+            label="Población o Online"
+            name="location"
+            value={form.location}
+            onChange={handleChange}
+            placeholder="Ciudad/Localidad o Online"
+            fullWidth
+            required
+          />
 
           <Box>
             <Typography variant="subtitle1" sx={{ mb: 1 }}>
@@ -143,22 +153,20 @@ const CreateService = () => {
 
           <Box sx={{ display: "flex", gap: 2 }}>
             <Button variant="contained" color="primary" type="submit">
-                Publicar servicio
+              Publicar servicio
             </Button>
             <Button
-                variant="outlined"
-                color="error"
-                onClick={() => {
+              variant="outlined"
+              color="error"
+              onClick={() => {
                 if (confirm("¿Seguro que quieres cancelar la creación?")) {
-                    const closed = window.close();
-                    if (!closed) navigate("/");
+                  navigate("/");
                 }
-                }}
+              }}
             >
-                Cancelar
+              Cancelar
             </Button>
           </Box>
-
         </Box>
       </Paper>
     </Container>

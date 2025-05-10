@@ -18,6 +18,9 @@ export const Service = new EntitySchema({
     price: {
       type: "decimal",
     },
+    location: {
+      type: "varchar",
+    },
     createdAt: {
       type: "timestamp",
       createDate: true,
