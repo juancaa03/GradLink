@@ -222,7 +222,7 @@ const authRoutes = (dataSource) => {
         });
 
         const info = await transporter.sendMail({
-          from: `"Mi App" <no-reply@miapp.com>`,
+          from: `"GradLink" <no-reply@gradlink.com>`,
           to: institutionalEmail,
           subject: "Verifica tu correo institucional",
           html: `
