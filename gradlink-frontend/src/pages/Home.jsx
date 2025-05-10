@@ -307,7 +307,7 @@ const Home = () => {
       <Container sx={{ mt: 4, paddingTop: "96px" }}>
         <Typography variant="h4" 
           sx={{ fontWeight: 'bold', color: '#f0f4f8', textAlign: 'center', mb: 2, mt: 2 }}>
-            Bienvenido,{" "}
+            Bienvenido/a,{" "}
           <Box component="span" sx={{ color: '#f0f4f8' }}>
             {user?.name || "usuario"}!
           </Box>
