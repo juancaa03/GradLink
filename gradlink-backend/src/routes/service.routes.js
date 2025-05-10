@@ -44,7 +44,7 @@ const serviceRoutes = (dataSource) => {
 
   // Listar servicios con filtros dinámicos
   router.get("/", async (req, res) => {
-    const { q, tags, minPrice, maxPrice, location } = req.query;
+    const { q, tags, minPrice, maxPrice, location, user } = req.query;
 
     const query = serviceRepo
       .createQueryBuilder("service")
@@ -75,6 +75,11 @@ const serviceRoutes = (dataSource) => {
       if (tagList.length > 0) {
         query.andWhere("LOWER(tag.name) IN (:...tagList)", { tagList });
       }
+    }
+
+    if (user) {
+      const lowerUser = `%${user.toLowerCase()}%`;
+      query.andWhere("LOWER(user.name) LIKE :lowerUser", { lowerUser });
     }
 
     const results = await query.getMany();

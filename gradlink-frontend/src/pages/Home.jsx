@@ -74,6 +74,7 @@ const Home = () => {
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const [locationFilter, setLocationFilter] = useState("");
+  const [filterUser, setFilterUser] = useState("");
 
   useEffect(() => {
     const newToken = searchParams.get("token");
@@ -215,6 +216,7 @@ const Home = () => {
     if (minPrice) params.append("minPrice", minPrice);
     if (maxPrice) params.append("maxPrice", maxPrice);
     if (locationFilter) params.append("location", locationFilter);
+    if (filterUser)    params.append("user", filterUser);
     try {
       const res = await fetch(`http://localhost:4000/api/services?${params.toString()}`, { headers: { Authorization: `Bearer ${token}` } });
       const data = await res.json(); setServices(data);
@@ -382,9 +384,10 @@ const Home = () => {
               </Button>)}
           </Box>
           <Box sx={{ display:"flex",gap:2,flexWrap:"wrap",px: 1.9,py: 0.5 }}>
-            <TextField label="Precio min" type="number" size="small" value={minPrice} onChange={e=>setMinPrice(e.target.value)} sx={{ width: 120 }} />
-            <TextField label="Precio max" type="number" size="small" value={maxPrice} onChange={e=>setMaxPrice(e.target.value)} sx={{ width: 120 }} />
-            <TextField label="Población" size="small" value={locationFilter} onChange={e=>setLocationFilter(e.target.value)} />
+            <TextField label="Usuario" size="small" value={filterUser} onChange={e=>setFilterUser(e.target.value)} sx={{ width: 170 }} />
+            <TextField label="Precio min" type="number" size="small" value={minPrice} onChange={e=>setMinPrice(e.target.value)} sx={{ width: 105 }} />
+            <TextField label="Precio max" type="number" size="small" value={maxPrice} onChange={e=>setMaxPrice(e.target.value)} sx={{ width: 107 }} />
+            <TextField label="Población" size="small" value={locationFilter} onChange={e=>setLocationFilter(e.target.value)} sx={{ width: 170 }}/>
             <Button sx={{ borderRadius: '99px' }} variant="outlined" onClick={applyFilters}>Filtrar</Button>
           </Box>
         </Box>
