@@ -25,6 +25,7 @@ const EditService = () => {
     title: "",
     description: "",
     price: "",
+    location: "",
     tags: [],
   });
   const [newTag, setNewTag] = useState("");
@@ -44,6 +45,7 @@ const EditService = () => {
           title: data.title,
           description: data.description,
           price: data.price,
+          location: data.location || "",
           tags: data.tags || [],
         });
       } catch (err) {
@@ -114,9 +116,9 @@ const EditService = () => {
     <Container maxWidth="sm" sx={{ mt: 6 }}>
       <Paper sx={{ p: 4, borderRadius: 3 }}>
         <Button variant="outlined" onClick={() => navigate("/my-services")} sx={{ mb: 2 }}>
-            ← Volver a mis servicios
+          ← Volver a mis servicios
         </Button>
-        
+
         <Typography variant="h5" gutterBottom>
           Editar servicio
         </Typography>
@@ -151,6 +153,14 @@ const EditService = () => {
             inputProps={{ step: "0.01", min: 0 }}
             required
           />
+          <TextField
+            label="Población (opcional)"
+            name="location"
+            value={form.location}
+            onChange={handleChange}
+            placeholder="Ciudad o localidad"
+            fullWidth
+          />
 
           <Box>
             <Typography variant="subtitle1" sx={{ mb: 1 }}>
@@ -158,11 +168,7 @@ const EditService = () => {
             </Typography>
             <Stack direction="row" spacing={1} sx={{ flexWrap: "wrap", mb: 1 }}>
               {form.tags.map((tag) => (
-                <Chip
-                  key={tag.name}
-                  label={tag.name}
-                  onDelete={() => removeTag(tag)}
-                />
+                <Chip key={tag.name} label={tag.name} onDelete={() => removeTag(tag)} />
               ))}
             </Stack>
             <Box sx={{ display: "flex", gap: 1 }}>

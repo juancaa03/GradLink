@@ -21,6 +21,7 @@ import Chip from "@mui/material/Chip";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import MarkChatUnreadOutlinedIcon from "@mui/icons-material/MarkChatUnreadOutlined";
 import SearchIcon from "@mui/icons-material/Search";
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import { styled, alpha } from "@mui/material/styles";
@@ -455,6 +456,7 @@ const Home = () => {
                           variant="filled"
                           sx={{
                             fontSize: 10,
+                            fontStyle: 'italic',
                             fontWeight: 500,
                             px: 0.75,
                             py: 0.25,
@@ -469,6 +471,14 @@ const Home = () => {
                     <Typography variant="caption" color="#dbe6f3" mt={1}>
                       Publicado el {new Date(service.createdAt).toLocaleDateString()}
                     </Typography>
+                    {service.location && (
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.3 }}>
+                        <LocationOnIcon sx={{ fontSize: 16, color: '#f0c987' }} />
+                        <Typography sx={{ transform: 'translateY(2px)', fontStyle: 'italic' }} variant="caption" color="#f0c987">
+                          {service.location}
+                        </Typography>
+                      </Box>
+                    )}
                   </Box>
                 </CardContent>
               </Card>
