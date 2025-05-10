@@ -92,7 +92,7 @@ const Home = () => {
           navigate("/login");
         });
     }
-  }, []);
+  }, [login, navigate, searchParams, setSearchParams]);
 
   const handleLogout = () => {
     logout();
