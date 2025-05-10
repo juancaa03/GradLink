@@ -14,6 +14,7 @@ import {
   Badge,
   Menu,
   MenuItem,
+  TextField,
 } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Avatar from "@mui/material/Avatar";
@@ -70,6 +71,9 @@ const Home = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
+  const [locationFilter, setLocationFilter] = useState("");
 
   useEffect(() => {
     const newToken = searchParams.get("token");
@@ -205,6 +209,18 @@ const Home = () => {
     }
   };
 
+  const applyFilters = async () => {
+    const params = new URLSearchParams();
+    if (searchTerm) params.append("q", searchTerm);
+    if (minPrice) params.append("minPrice", minPrice);
+    if (maxPrice) params.append("maxPrice", maxPrice);
+    if (locationFilter) params.append("location", locationFilter);
+    try {
+      const res = await fetch(`http://localhost:4000/api/services?${params.toString()}`, { headers: { Authorization: `Bearer ${token}` } });
+      const data = await res.json(); setServices(data);
+    } catch (err) { console.error(err); }
+  };
+
   return (
     <>
       <AppBar
@@ -294,7 +310,8 @@ const Home = () => {
             justifyContent: "space-between",
             alignItems: "center",
             mb: 3,
-            flexWrap: "wrap",
+            mt: 4,
+            flexWrap: "nowrap",
             gap: 2,
           }}
         >
@@ -363,6 +380,12 @@ const Home = () => {
               >
                 Mis servicios
               </Button>)}
+          </Box>
+          <Box sx={{ display:"flex",gap:2,flexWrap:"wrap",px: 1.9,py: 0.5 }}>
+            <TextField label="Precio min" type="number" size="small" value={minPrice} onChange={e=>setMinPrice(e.target.value)} sx={{ width: 120 }} />
+            <TextField label="Precio max" type="number" size="small" value={maxPrice} onChange={e=>setMaxPrice(e.target.value)} sx={{ width: 120 }} />
+            <TextField label="Población" size="small" value={locationFilter} onChange={e=>setLocationFilter(e.target.value)} />
+            <Button sx={{ borderRadius: '99px' }} variant="outlined" onClick={applyFilters}>Filtrar</Button>
           </Box>
         </Box>
 
