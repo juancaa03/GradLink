@@ -8,6 +8,12 @@ const serviceRoutes = (dataSource) => {
 
   // Crear un nuevo servicio (solo logueados)
   router.post("/", authenticateToken, async (req, res) => {
+    
+    if (req.user.role === "client") {
+      return res
+        .status(403)
+        .json({ error: "Forbidden: no tienes permiso para crear servicios" });
+    }
     const { title, description, price, tags = [] } = req.body;
     const user = await dataSource.getRepository("User").findOneBy({ id: req.user.id });
 
