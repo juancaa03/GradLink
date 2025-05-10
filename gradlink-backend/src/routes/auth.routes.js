@@ -149,8 +149,8 @@ const authRoutes = (dataSource) => {
       await userRepo.save(user);
 
       // Redirigir a tu frontend o mostrar mensaje
-      //return res.redirect(process.env.FRONTEND_URL);
-      return res.send("Correo institucional verificado exitosamente. Ahora tienes el rol de estudiante.");
+      return res.redirect(`${process.env.FRONTEND_URL}/?token=${encodeURIComponent(newToken)}`);
+      //return res.send("Correo institucional verificado exitosamente. Ahora tienes el rol de estudiante.");
     } catch (err) {
       console.error(err);
       return res.status(400).send("Token inválido o expirado.");
@@ -174,96 +174,109 @@ const authRoutes = (dataSource) => {
   });
 
   router.put("/me", authenticateToken, async (req, res) => {
-    const { name, password, institutionalEmail } = req.body;
+    // 1) Si viene ?token=… en la URL, lo usamos para verificar el correo
+    const verifyToken = req.query.token;
+    if (verifyToken) {
+      try {
+        // Validar token de verificación
+        const { userId } = jwt.verify(verifyToken, process.env.JWT_VERIF_SECRET);
+        const userToVerify = await userRepo.findOneBy({ id: userId });
+        if (!userToVerify || !userToVerify.institutionalEmail) {
+          return res.status(400).json({ error: "Usuario no válido o sin correo institucional." });
+        }
+        if (userToVerify.institutionalEmailVerified) {
+          return res.status(200).json({ message: "Ya verificado previamente." });
+        }
 
+        // Marcar verificado y asignar rol
+        userToVerify.institutionalEmailVerified = true;
+        userToVerify.role = "student";
+        await userRepo.save(userToVerify);
+
+        // Generar nuevo JWT con el rol actualizado
+        const newAuthToken = jwt.sign(
+          { id: userToVerify.id, role: userToVerify.role },
+          process.env.JWT_SECRET,
+          { expiresIn: "1d" }
+        );
+
+        return res.json({
+          message: "Correo institucional verificado. Ahora eres estudiante.",
+          token: newAuthToken,
+          user: {
+            id: userToVerify.id,
+            name: userToVerify.name,
+            email: userToVerify.email,
+            institutionalEmail: userToVerify.institutionalEmail,
+            institutionalEmailVerified: userToVerify.institutionalEmailVerified,
+            role: userToVerify.role,
+          },
+        });
+      } catch (err) {
+        console.error("Error verif. inst.:", err);
+        return res.status(400).json({ error: "Token inválido o expirado." });
+      }
+    }
+
+    // 2) Si no hay token, es un simple update de perfil
+    const { name, password, institutionalEmail } = req.body;
     try {
       const user = await userRepo.findOneBy({ id: req.user.id });
-      if (!user) {
-        return res.status(404).json({ error: "Usuario no encontrado" });
-      }
+      if (!user) return res.status(404).json({ error: "Usuario no encontrado." });
 
-      if (name) {
-        user.name = name;
-      }
-      if (password) {
-        user.password = await bcrypt.hash(password, 10);
-      }
+      // Actualizar nombre o password
+      if (name) user.name = name;
+      if (password) user.password = await bcrypt.hash(password, 10);
 
-      // 2) Si cambia el correo institucional, reset y envío de verificación
+      // Si cambia el correo institucional, resetear flags y enviar nuevo mail
       if (institutionalEmail && institutionalEmail !== user.institutionalEmail) {
-        const allowed = process.env.ALLOWED_INSTITUTIONAL_DOMAINS?.split(",") || [];
+        const allowed = process.env.ALLOWED_INSTITUTIONAL_DOMAINS.split(",");
         const domain = institutionalEmail.split("@")[1];
         if (!allowed.includes(domain)) {
           return res.status(400).json({ error: "Dominio institucional no permitido." });
         }
 
-        // 2.2) Reset de verificación y rol
         user.institutionalEmail = institutionalEmail;
         user.institutionalEmailVerified = false;
         user.role = "client";
 
-        // 2.3) Generar token + URL
-        const token = jwt.sign(
+        // Generar token de verificación y URL
+        const mailToken = jwt.sign(
           { userId: user.id },
           process.env.JWT_VERIF_SECRET,
           { expiresIn: "1d" }
         );
-        const verifyUrl = `${process.env.FRONTEND_URL}/verify-institutional?token=${token}`;
+        const verifyUrl = `${process.env.BACKEND_URL}/api/auth/verify-institutional?token=${mailToken}`;
 
-        // 2.4) Envío de correo con Ethereal (desarrollo)
+        // Enviar correo (Ethereal o real)
         const testAccount = await nodemailer.createTestAccount();
         const transporter = nodemailer.createTransport({
           host: testAccount.smtp.host,
           port: testAccount.smtp.port,
           secure: testAccount.smtp.secure,
-          auth: {
-            user: testAccount.user,
-            pass: testAccount.pass,
-          },
+          auth: { user: testAccount.user, pass: testAccount.pass },
         });
-
         const info = await transporter.sendMail({
           from: `"GradLink" <no-reply@gradlink.com>`,
           to: institutionalEmail,
           subject: "Verifica tu correo institucional",
           html: `
             <p>Hola ${user.name},</p>
-            <p>Has pedido cambiar tu correo institucional. Haz clic <a href="${verifyUrl}">aquí</a> para verificarlo y reactivar tu rol de estudiante.</p>
+            <p>Haz clic <a href="${verifyUrl}">aquí</a> para verificar tu correo institucional.</p>
             <p>Este enlace caduca en 24h.</p>
           `,
         });
-
         console.log("⚡ Preview URL:", nodemailer.getTestMessageUrl(info));
-
-        /* 
-        // Codigo para produccion con smtp
-        const transporter = nodemailer.createTransport({
-          host: process.env.SMTP_HOST,
-          port: +process.env.SMTP_PORT,
-          secure: true,
-          auth: {
-            user: process.env.SMTP_USER,
-            pass: process.env.SMTP_PASS,
-          },
-        });
-        await transporter.sendMail({ … });
-        */
       }
 
-      // 3) Guardar y responder
       await userRepo.save(user);
-      res.json({
-        message:
-          "Perfil actualizado correctamente." +
-          (institutionalEmail
-            ? " Revisa la consola para el enlace de verificación."
-            : ""),
-      });
+      res.json({ message: "Perfil actualizado. Si cambiaste correo, revisa tu email para verificar." });
     } catch (err) {
       console.error("Error en PUT /me:", err);
       res.status(500).json({ error: "Error al actualizar el perfil." });
     }
   });
+
 
 
   return router;

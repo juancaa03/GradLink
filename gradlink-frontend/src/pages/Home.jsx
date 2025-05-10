@@ -78,21 +78,27 @@ const Home = () => {
 
   useEffect(() => {
     const newToken = searchParams.get("token");
-    if (newToken) {
-      fetch(`http://localhost:4000/api/auth/me`, {
-        headers: { Authorization: `Bearer ${newToken}` },
+    if (!newToken) return;
+
+    // 1) Llamamos a /me CON el nuevo token
+    fetch(`http://localhost:4000/api/auth/me`, {
+      headers: { Authorization: `Bearer ${newToken}` },
+    })
+      .then(res => {
+        if (!res.ok) throw new Error("No puedo refrescar perfil");
+        return res.json();
       })
-        .then((res) => res.ok ? res.json() : Promise.reject("Failed to refresh"))
-        .then((freshUser) => {
-          login({ token: newToken, user: freshUser });
-          setSearchParams({}); // remove token from URL
-        })
-        .catch((err) => {
-          console.error("Error refreshing profile:", err);
-          navigate("/login");
-        });
-    }
+      .then(freshUser => {
+        // 2) Actualiza el contexto y limpia la URL
+        login({ token: newToken, user: freshUser });
+        setSearchParams({});
+      })
+      .catch(err => {
+        console.error("Error refreshing profile:", err);
+        navigate("/login");
+      });
   }, [login, navigate, searchParams, setSearchParams]);
+
 
   const handleLogout = () => {
     logout();
