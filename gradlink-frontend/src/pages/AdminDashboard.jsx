@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
   Box,
+  Button,
   Typography,
   CircularProgress,
   Table,
@@ -14,8 +15,10 @@ import {
   MenuItem,
 } from "@mui/material";
 import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export default function AdminDashboard() {
+  const navigate = useNavigate();
   const { token } = useAuth();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -83,23 +86,45 @@ export default function AdminDashboard() {
     );
   }
 
+  const formatDate = (isoString) => {
+  const date = new Date(isoString);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed
+  const day = String(date.getDate()).padStart(2, "0");
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+
+  return `${day}/${month}/${year} ${hours}:${minutes}`;
+};
+
   return (
     <Box sx={{ p: 4 }}>
-      <Typography
-        variant="h4"
-        sx={{ mb: 4, fontWeight: "bold", color: "#203040" }}
-      >
-        Panel de Administración
-      </Typography>
+      <Box sx={{ mb: 4, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 2 }}>
+        <Typography
+          variant="h4"
+          sx={{ mb: 4, fontWeight: "bold", color: "#ffff00" }}
+        >
+          Panel de Administración
+        </Typography>
+        <Button 
+            sx={{ transform: "translateY(-15px)", borderRadius: '99px', color: '#ffff00', borderColor: '#ffff00', "&:hover": {
+              backgroundColor: "#ffff00",
+              borderColor: "#2c3544",
+              color: "#2c3544",
+              transition: "all 0.3s ease-in-out",
+            },}} variant="outlined" onClick={() => navigate("/home")}>Volver</Button>
+      </Box>
 
       <TableContainer component={Paper} sx={{ boxShadow: 3, borderRadius: 2 }}>
         <Table>
           <TableHead>
             <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
               <TableCell sx={{ fontWeight: "bold" }}>ID Pedido</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Fecha creación</TableCell>
               <TableCell sx={{ fontWeight: "bold" }}>Cliente</TableCell>
-              <TableCell sx={{ fontWeight: "bold" }}>Servicios</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Servicios (id)</TableCell>
               <TableCell sx={{ fontWeight: "bold" }}>Estado</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -111,6 +136,7 @@ export default function AdminDashboard() {
                 }}
               >
                 <TableCell>{order.id}</TableCell>
+                <TableCell>{formatDate(order.createdAt)}</TableCell>
                 <TableCell>{order.user.name}</TableCell>
                 <TableCell>
                   {order.service ? (

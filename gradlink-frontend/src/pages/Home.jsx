@@ -389,18 +389,97 @@ const Home = () => {
               >
                 Mis servicios
               </Button>)}
+            {user?.role === "admin" && (
+              <Button
+                color="#11294d"
+                onClick={() => navigate("/admindashboard")}
+                sx={{
+                  background: `
+                  linear-gradient(
+                    to top,
+                    rgba(20, 28, 38, 0.9) 0%,
+                    rgba(30, 40, 55, 0.88) 40%,
+                    rgba(40, 52, 70, 0.85) 100%
+                  )
+                  `,
+                  backdropFilter: "blur(14px)",
+                  backgroundBlendMode: "lighten",
+                  borderRadius: "99px",
+                  border: "1px solid rgba(255, 255, 255, 0.08)",
+                  color: "#f1f4f8",
+                  px: 1.7,
+                  py: 1,
+                  transition: "all 0.3s ease-in-out",
+                  cursor: "pointer",
+                  boxShadow: "0 6px 36px rgba(255, 255, 255, 0.08)",
+                  "&:hover": {
+                    boxShadow: "0 8px 48px rgba(255, 255, 255, 0.2)",
+                    transform: "translateY(-2px)",
+                  },
+                }}
+              >
+                Dashboard
+              </Button>)}
           </Box>
           <Box sx={{ display:"flex",gap:2,flexWrap:"wrap",px: 1.9,py: 0.5 }}>
-            <TextField label="Usuario" size="small" value={filterUser} onChange={e=>setFilterUser(e.target.value)} sx={{ width: 170 }} />
+            <TextField label="Usuario" size="small" value={filterUser} onChange={e=>setFilterUser(e.target.value)} sx={{ width: 170, "& .MuiInputLabel-root.Mui-focused": {
+              color: "#f0c987",
+            }, "& .MuiOutlinedInput-root": {
+              // borde hover
+              "&:hover fieldset": {
+                borderColor: "#f0c987",
+              },
+              // borde cuando está enfocado
+              "&.Mui-focused fieldset": {
+                borderColor: "#f0c987",
+              },
+            }, }} />
             <TextField label="Precio min" type="number" size="small" value={minPrice} onChange={e=>setMinPrice(e.target.value)} sx={{ width: 105, '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
               WebkitAppearance: 'none',
               margin: 0,
-            } }} />
+            }, '& input[type=number]': {
+              MozAppearance: 'textfield',
+            }, "& .MuiInputLabel-root.Mui-focused": {
+              color: "#f0c987",
+            }, "& .MuiOutlinedInput-root": {
+              // borde hover
+              "&:hover fieldset": {
+                borderColor: "#f0c987",
+              },
+              // borde cuando está enfocado
+              "&.Mui-focused fieldset": {
+                borderColor: "#f0c987",
+              },
+            }, }} />
             <TextField label="Precio max" type="number" size="small" value={maxPrice} onChange={e=>setMaxPrice(e.target.value)} sx={{ width: 107, '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
               WebkitAppearance: 'none',
               margin: 0,
-            } }} />
-            <TextField label="Población" size="small" value={locationFilter} onChange={e=>setLocationFilter(e.target.value)} sx={{ width: 170 }}/>
+            },'& input[type=number]': {
+              MozAppearance: 'textfield',
+            }, "& .MuiInputLabel-root.Mui-focused": {
+              color: "#f0c987",
+            }, "& .MuiOutlinedInput-root": {
+              // borde hover
+              "&:hover fieldset": {
+                borderColor: "#f0c987",
+              },
+              // borde cuando está enfocado
+              "&.Mui-focused fieldset": {
+                borderColor: "#f0c987",
+              },
+            }, }} />
+            <TextField label="Población" size="small" value={locationFilter} onChange={e=>setLocationFilter(e.target.value)} sx={{ width: 170, "& .MuiInputLabel-root.Mui-focused": {
+              color: "#f0c987",
+            }, "& .MuiOutlinedInput-root": {
+              // borde hover
+              "&:hover fieldset": {
+                borderColor: "#f0c987",
+              },
+              // borde cuando está enfocado
+              "&.Mui-focused fieldset": {
+                borderColor: "#f0c987",
+              },
+            }, }}/>
             <Button 
             sx={{ borderRadius: '99px', color: '#f0c987', borderColor: '#f0c987', "&:hover": {
               backgroundColor: "#f0c987",
