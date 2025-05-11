@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   Typography,
@@ -11,15 +11,16 @@ import {
 } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Chip from "@mui/material/Chip";
-import LocationOnIcon from '@mui/icons-material/LocationOn';
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { useAuth } from "../context/AuthContext";
-import "../../src/App.css"
+import { SearchContext } from "../context/SearchContext.jsx";
+import "../../src/App.css";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 
-const Home = () => {
+export default function Home() {
   const { login, user, token, setHasUnread } = useAuth();
-  const [searchTerm, setSearchTerm] = useState("");
+  const { searchTerm } = useContext(SearchContext);
   const [services, setServices] = useState([]);
   const [cartCount, setCartCount] = useState(0);
   const navigate = useNavigate();
@@ -29,117 +30,99 @@ const Home = () => {
   const [locationFilter, setLocationFilter] = useState("");
   const [filterUser, setFilterUser] = useState("");
 
+  // 1) Refrescar perfil si hay token en URL
   useEffect(() => {
     const newToken = searchParams.get("token");
     if (!newToken) return;
 
-    // 1) Llamamos a /me CON el nuevo token
     fetch(`http://localhost:4000/api/auth/me`, {
       headers: { Authorization: `Bearer ${newToken}` },
     })
-      .then(res => {
+      .then((res) => {
         if (!res.ok) throw new Error("No puedo refrescar perfil");
         return res.json();
       })
-      .then(freshUser => {
-        // 2) Actualiza el contexto y limpia la URL
+      .then((freshUser) => {
         login({ token: newToken, user: freshUser });
         setSearchParams({});
       })
-      .catch(err => {
-        console.error("Error refreshing profile:", err);
-        navigate("/login");
-      });
+      .catch(() => navigate("/login"));
   }, [login, navigate, searchParams, setSearchParams]);
 
+  // 2) Mensajes no leídos
   useEffect(() => {
     const checkUnread = async () => {
-      try {
-        const res = await fetch("http://localhost:4000/api/messages/has-unread", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        if (!res.ok) throw new Error("Error al verificar mensajes");
-        const data = await res.json();
-        setHasUnread(data.hasUnread);
-      } catch (err) {
-        console.error(err.message);
-      }
+      const res = await fetch("http://localhost:4000/api/messages/has-unread", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      setHasUnread(data.hasUnread);
     };
-
     checkUnread();
-
-    const handleFocus = () => checkUnread();
-    window.addEventListener("focus", handleFocus);
-
-    return () => {
-      window.removeEventListener("focus", handleFocus);
-    };
+    window.addEventListener("focus", checkUnread);
+    return () => window.removeEventListener("focus", checkUnread);
   }, [token, setHasUnread]);
 
+  // 3) Conteo carrito
   useEffect(() => {
-    const fetchCartCount = async () => {
-      try {
-        const res = await fetch("http://localhost:4000/api/cart", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        if (!res.ok) throw new Error("Error al obtener carrito");
-        const data = await res.json();
-        setCartCount(data.length);
-      } catch (err) {
-        console.error(err.message);
-      }
-    };
-
-    fetchCartCount();
+    (async () => {
+      const res = await fetch("http://localhost:4000/api/cart", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      setCartCount(data.length);
+    })();
   }, [token]);
 
+  // 4) Carga de servicios cada vez que cambien token, searchTerm o filtros
   useEffect(() => {
-    const fetchAllServices = async () => {
+    const fetchServices = async () => {
+      const params = new URLSearchParams();
+      if (searchTerm)      params.append("q", searchTerm);
+      if (minPrice)        params.append("minPrice", minPrice);
+      if (maxPrice)        params.append("maxPrice", maxPrice);
+      if (locationFilter)  params.append("location", locationFilter);
+      if (filterUser)      params.append("user", filterUser);
+
+      const baseUrl = "http://localhost:4000/api/services";
+      const qs      = params.toString();
+      const url     = qs ? `${baseUrl}?${qs}` : baseUrl;
+
       try {
-        const res = await fetch("http://localhost:4000/api/services", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+        const res = await fetch(url, {
+          headers: { Authorization: `Bearer ${token}` },
         });
-        if (!res.ok) throw new Error("Error cargando servicios");
         const data = await res.json();
         setServices(data);
       } catch (err) {
-        console.error(err.message);
+        console.error("Error cargando servicios:", err);
       }
     };
 
-    fetchAllServices();
-  }, [token]);
-
-  const applyFilters = async () => {
-    const params = new URLSearchParams();
-    if (searchTerm) params.append("q", searchTerm);
-    if (minPrice) params.append("minPrice", minPrice);
-    if (maxPrice) params.append("maxPrice", maxPrice);
-    if (locationFilter) params.append("location", locationFilter);
-    if (filterUser)    params.append("user", filterUser);
-    try {
-      const res = await fetch(`http://localhost:4000/api/services?${params.toString()}`, { headers: { Authorization: `Bearer ${token}` } });
-      const data = await res.json(); setServices(data);
-    } catch (err) { console.error(err); }
-  };
+    fetchServices();
+  }, [token, searchTerm, minPrice, maxPrice, locationFilter, filterUser]);
 
   return (
     <>
       <Navbar />
+
       <Container sx={{ mt: 4, paddingTop: "96px" }}>
-        <Typography variant="h4" 
-          sx={{ fontWeight: 'bold', color: '#f0f4f8', textAlign: 'center', mb: 2, mt: 2 }}>
-            Bienvenido/a,{" "}
-          <Box component="span" sx={{ color: '#f0f4f8' }}>
+        <Typography
+          variant="h4"
+          sx={{
+            fontWeight: "bold",
+            color: "#f0f4f8",
+            textAlign: "center",
+            mb: 2,
+            mt: 2,
+          }}
+        >
+          Bienvenido/a,{" "}
+          <Box component="span" sx={{ color: "#f0f4f8" }}>
             {user?.name || "usuario"}!
           </Box>
         </Typography>
+
         <Box
           sx={{
             display: "flex",
@@ -152,7 +135,7 @@ const Home = () => {
           }}
         >
           <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", color: "#f1ebe3" }}>
-            { user?.role !== "client" && (
+            {user?.role !== "client" && (
               <Button
                 color="#f1ebe3"
                 onClick={() =>
@@ -160,12 +143,12 @@ const Home = () => {
                 }
                 sx={{
                   background: `
-                  linear-gradient(
-                    to top,
-                    rgba(20, 28, 38, 0.9) 0%,
-                    rgba(30, 40, 55, 0.88) 40%,
-                    rgba(40, 52, 70, 0.85) 100%
-                  )
+                    linear-gradient(
+                      to top,
+                      rgba(20, 28, 38, 0.9) 0%,
+                      rgba(30, 40, 55, 0.88) 40%,
+                      rgba(40, 52, 70, 0.85) 100%
+                    )
                   `,
                   backdropFilter: "blur(14px)",
                   backgroundBlendMode: "lighten",
@@ -183,20 +166,21 @@ const Home = () => {
                   },
                 }}
               >
-              +
-              </Button>)}
+                +
+              </Button>
+            )}
             {user?.role !== "client" && (
               <Button
                 color="#11294d"
                 onClick={() => navigate("/my-services")}
                 sx={{
                   background: `
-                  linear-gradient(
-                    to top,
-                    rgba(20, 28, 38, 0.9) 0%,
-                    rgba(30, 40, 55, 0.88) 40%,
-                    rgba(40, 52, 70, 0.85) 100%
-                  )
+                    linear-gradient(
+                      to top,
+                      rgba(20, 28, 38, 0.9) 0%,
+                      rgba(30, 40, 55, 0.88) 40%,
+                      rgba(40, 52, 70, 0.85) 100%
+                    )
                   `,
                   backdropFilter: "blur(14px)",
                   backgroundBlendMode: "lighten",
@@ -215,19 +199,20 @@ const Home = () => {
                 }}
               >
                 Mis servicios
-              </Button>)}
+              </Button>
+            )}
             {user?.role === "admin" && (
               <Button
                 color="#11294d"
                 onClick={() => navigate("/admindashboard")}
                 sx={{
                   background: `
-                  linear-gradient(
-                    to top,
-                    rgba(20, 28, 38, 0.9) 0%,
-                    rgba(30, 40, 55, 0.88) 40%,
-                    rgba(40, 52, 70, 0.85) 100%
-                  )
+                    linear-gradient(
+                      to top,
+                      rgba(20, 28, 38, 0.9) 0%,
+                      rgba(30, 40, 55, 0.88) 40%,
+                      rgba(40, 52, 70, 0.85) 100%
+                    )
                   `,
                   backdropFilter: "blur(14px)",
                   backgroundBlendMode: "lighten",
@@ -246,74 +231,78 @@ const Home = () => {
                 }}
               >
                 Dashboard
-              </Button>)}
+              </Button>
+            )}
           </Box>
-          <Box sx={{ display:"flex",gap:2,flexWrap:"wrap",px: 1.9,py: 0.5 }}>
-            <TextField label="Usuario" size="small" value={filterUser} onChange={e=>setFilterUser(e.target.value)} sx={{ width: 170, "& .MuiInputLabel-root.Mui-focused": {
-              color: "#f0c987",
-            }, "& .MuiOutlinedInput-root": {
-              // borde hover
-              "&:hover fieldset": {
-                borderColor: "#f0c987",
-              },
-              // borde cuando está enfocado
-              "&.Mui-focused fieldset": {
-                borderColor: "#f0c987",
-              },
-            }, }} />
-            <TextField label="Precio min" type="number" size="small" value={minPrice} onChange={e=>setMinPrice(e.target.value)} sx={{ width: 105, '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
-              WebkitAppearance: 'none',
-              margin: 0,
-            }, '& input[type=number]': {
-              MozAppearance: 'textfield',
-            }, "& .MuiInputLabel-root.Mui-focused": {
-              color: "#f0c987",
-            }, "& .MuiOutlinedInput-root": {
-              // borde hover
-              "&:hover fieldset": {
-                borderColor: "#f0c987",
-              },
-              // borde cuando está enfocado
-              "&.Mui-focused fieldset": {
-                borderColor: "#f0c987",
-              },
-            }, }} />
-            <TextField label="Precio max" type="number" size="small" value={maxPrice} onChange={e=>setMaxPrice(e.target.value)} sx={{ width: 107, '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
-              WebkitAppearance: 'none',
-              margin: 0,
-            },'& input[type=number]': {
-              MozAppearance: 'textfield',
-            }, "& .MuiInputLabel-root.Mui-focused": {
-              color: "#f0c987",
-            }, "& .MuiOutlinedInput-root": {
-              // borde hover
-              "&:hover fieldset": {
-                borderColor: "#f0c987",
-              },
-              // borde cuando está enfocado
-              "&.Mui-focused fieldset": {
-                borderColor: "#f0c987",
-              },
-            }, }} />
-            <TextField label="Población" size="small" value={locationFilter} onChange={e=>setLocationFilter(e.target.value)} sx={{ width: 170, "& .MuiInputLabel-root.Mui-focused": {
-              color: "#f0c987",
-            }, "& .MuiOutlinedInput-root": {
-              // borde hover
-              "&:hover fieldset": {
-                borderColor: "#f0c987",
-              },
-              // borde cuando está enfocado
-              "&.Mui-focused fieldset": {
-                borderColor: "#f0c987",
-              },
-            }, }}/>
-            <Button 
-            sx={{ borderRadius: '99px', color: '#f0c987', borderColor: '#f0c987', "&:hover": {
-              backgroundColor: "#f0c987",
-              borderColor: "#2c3544",
-              color: "#2c3544",
-              transition: "all 0.3s ease-in-out",
-            },}} variant="outlined" onClick={applyFilters}>Filtrar</Button>
+          <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", px: 1.9, py: 0.5 }}>
+            <TextField
+              label="Usuario"
+              size="small"
+              value={filterUser}
+              onChange={(e) => setFilterUser(e.target.value)}
+              sx={{
+                width: 170,
+                "& .MuiInputLabel-root.Mui-focused": { color: "#f0c987" },
+                "& .MuiOutlinedInput-root": {
+                  "&:hover fieldset": { borderColor: "#f0c987" },
+                  "&.Mui-focused fieldset": { borderColor: "#f0c987" },
+                },
+              }}
+            />
+            <TextField
+              label="Precio min"
+              type="number"
+              size="small"
+              value={minPrice}
+              onChange={(e) => setMinPrice(e.target.value)}
+              sx={{
+                width: 105,
+                "& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button": {
+                  WebkitAppearance: "none",
+                  margin: 0,
+                },
+                "& input[type=number]": { MozAppearance: "textfield" },
+                "& .MuiInputLabel-root.Mui-focused": { color: "#f0c987" },
+                "& .MuiOutlinedInput-root": {
+                  "&:hover fieldset": { borderColor: "#f0c987" },
+                  "&.Mui-focused fieldset": { borderColor: "#f0c987" },
+                },
+              }}
+            />
+            <TextField
+              label="Precio max"
+              type="number"
+              size="small"
+              value={maxPrice}
+              onChange={(e) => setMaxPrice(e.target.value)}
+              sx={{
+                width: 107,
+                "& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button": {
+                  WebkitAppearance: "none",
+                  margin: 0,
+                },
+                "& input[type=number]": { MozAppearance: "textfield" },
+                "& .MuiInputLabel-root.Mui-focused": { color: "#f0c987" },
+                "& .MuiOutlinedInput-root": {
+                  "&:hover fieldset": { borderColor: "#f0c987" },
+                  "&.Mui-focused fieldset": { borderColor: "#f0c987" },
+                },
+              }}
+            />
+            <TextField
+              label="Población"
+              size="small"
+              value={locationFilter}
+              onChange={(e) => setLocationFilter(e.target.value)}
+              sx={{
+                width: 170,
+                "& .MuiInputLabel-root.Mui-focused": { color: "#f0c987" },
+                "& .MuiOutlinedInput-root": {
+                  "&:hover fieldset": { borderColor: "#f0c987" },
+                  "&.Mui-focused fieldset": { borderColor: "#f0c987" },
+                },
+              }}
+            />
           </Box>
         </Box>
 
@@ -362,7 +351,6 @@ const Home = () => {
                     transform: "translateY(-4px)",
                   },
                 }}
-                               
                 onClick={() => navigate(`/service/${service.id}`)}
               >
                 <CardContent sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
@@ -375,7 +363,6 @@ const Home = () => {
                     </Typography>
                   </Box>
 
-                  {/* Contenido centrado */}
                   <Box
                     sx={{
                       display: "flex",
@@ -408,7 +395,7 @@ const Home = () => {
                           variant="filled"
                           sx={{
                             fontSize: 10,
-                            fontStyle: 'italic',
+                            fontStyle: "italic",
                             fontWeight: 500,
                             px: 0.75,
                             py: 0.25,
@@ -424,9 +411,13 @@ const Home = () => {
                       Publicado el {new Date(service.createdAt).toLocaleDateString()}
                     </Typography>
                     {service.location && (
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.3 }}>
-                        <LocationOnIcon sx={{ fontSize: 16, color: '#f0c987' }} />
-                        <Typography sx={{ transform: 'translateY(2px)', fontStyle: 'italic' }} variant="caption" color="#f0c987">
+                      <Box sx={{ display: "flex", alignItems: "center", gap: 0.3 }}>
+                        <LocationOnIcon sx={{ fontSize: 16, color: "#f0c987" }} />
+                        <Typography
+                          sx={{ transform: "translateY(2px)", fontStyle: "italic" }}
+                          variant="caption"
+                          color="#f0c987"
+                        >
                           {service.location}
                         </Typography>
                       </Box>
@@ -435,13 +426,11 @@ const Home = () => {
                 </CardContent>
               </Card>
             ))}
-
           </Box>
         )}
       </Container>
+
       <Footer />
     </>
   );
-};
-
-export default Home;
+}
