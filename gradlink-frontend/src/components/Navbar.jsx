@@ -92,7 +92,7 @@ export default function Navbar() {
 		  });
 	  }, [login, navigate, searchParams, setSearchParams]);
 	
-	  useEffect(() => {
+	useEffect(() => {
 		const checkUnread = async () => {
 		  try {
 			const res = await fetch("http://localhost:4000/api/messages/has-unread", {
@@ -118,7 +118,7 @@ export default function Navbar() {
 		};
 	  }, [token, setHasUnread]);
 	
-	  useEffect(() => {
+	useEffect(() => {
 		const fetchCartCount = async () => {
 		  try {
 			const res = await fetch("http://localhost:4000/api/cart", {
@@ -137,7 +137,7 @@ export default function Navbar() {
 		fetchCartCount();
 	  }, [token]);
 	
-	  useEffect(() => {
+	useEffect(() => {
 		const fetchAllServices = async () => {
 		  try {
 			const res = await fetch("http://localhost:4000/api/services", {

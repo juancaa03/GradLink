@@ -1,68 +1,21 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import {
-  AppBar,
-  Toolbar,
   Typography,
-  IconButton,
-  InputBase,
   Box,
   Container,
   Card,
   CardContent,
   Button,
-  Badge,
-  Menu,
-  MenuItem,
   TextField,
 } from "@mui/material";
-import LogoutIcon from "@mui/icons-material/Logout";
 import Avatar from "@mui/material/Avatar";
 import Chip from "@mui/material/Chip";
-import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
-import MarkChatUnreadOutlinedIcon from "@mui/icons-material/MarkChatUnreadOutlined";
-import SearchIcon from "@mui/icons-material/Search";
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import AccountCircle from "@mui/icons-material/AccountCircle";
-import { styled, alpha } from "@mui/material/styles";
 import { useAuth } from "../context/AuthContext";
 import "../../src/App.css"
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
-
-const Search = styled("div")(({ theme }) => ({
-  position: "relative",
-  borderRadius: "99px",
-  backgroundColor: alpha(theme.palette.common.black, 0.05),
-  "&:hover": {
-    backgroundColor: alpha(theme.palette.common.black, 0.1),
-  },
-  marginLeft: 0,
-  width: "100%",
-  [theme.breakpoints.up("sm")]: {
-    width: "auto",
-  },
-}));
-
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
-  width: "100%",
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-  },
-}));
 
 const Home = () => {
   const { login, user, token, setHasUnread } = useAuth();

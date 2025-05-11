@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Typography, Link, IconButton, Stack, Divider } from "@mui/material";
 import FacebookIcon from "@mui/icons-material/Facebook";
-import TwitterIcon from "@mui/icons-material/Twitter";
+import TwitterIcon from "@mui/icons-material/X";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import logo from "../assets/Gradlink-logo-light-removebg.png";
@@ -86,7 +86,7 @@ export default function Footer() {
           <Box>
             {[
               { icon: <FacebookIcon />, href: "https://facebook.com" },
-              { icon: <TwitterIcon />, href: "https://twitter.com" },
+              { icon: <TwitterIcon />, href: "https://x.com" },
               { icon: <LinkedInIcon />, href: "https://linkedin.com" },
               { icon: <InstagramIcon />, href: "https://instagram.com" },
             ].map(({ icon, href }) => (

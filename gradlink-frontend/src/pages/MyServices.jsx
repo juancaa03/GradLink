@@ -102,35 +102,6 @@ const MyServices = () => {
                   >
                       Editar
                   </Button>
-                  <Button
-                      variant="outlined"
-                      color="error"
-                      size="small"
-                      startIcon={<DeleteIcon />}
-                      onClick={async (e) => {
-                          e.stopPropagation();
-                          if (confirm("¿Seguro que quieres eliminar este servicio?")) {
-                            try {
-                              const res = await fetch(`http://localhost:4000/api/services/${service.id}`, {
-                                method: "DELETE",
-                                headers: {
-                                  Authorization: `Bearer ${token}`,
-                                },
-                              });
-                        
-                              if (!res.ok) throw new Error("Error al eliminar el servicio");
-                        
-                              setServices((prev) => prev.filter((s) => s.id !== service.id));
-                            } catch (err) {
-                              alert("No se pudo eliminar el servicio");
-                              console.error(err);
-                            }
-                          }
-                        }}
-                        
-                  >
-                      Eliminar
-                  </Button>
                   </Box>
               </Card>
             ))}
