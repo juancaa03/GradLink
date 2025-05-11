@@ -55,7 +55,26 @@ const orderRoutes = (dataSource) => {
     res.json({ message: "Estado actualizado", order });
   });
 
-    // Confirmar pedido y guardar orden después de Stripe
+  // Actualizar estado (solo admin)
+  router.put("/:id", authenticateToken, async (req, res) => {
+    if (req.user.role !== "admin") return res.status(403).json({ error: "Acceso denegado" });
+
+    const { status } = req.body;
+    const orderId = parseInt(req.params.id, 10);
+    try {
+      const order = await orderRepo.findOne({ where: { id: orderId } });
+      if (!order) return res.status(404).json({ error: "Pedido no encontrado" });
+
+      order.status = status;
+      const updated = await orderRepo.save(order);
+      res.json({ message: "Estado actualizado", order: updated });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Error al actualizar estado" });
+    }
+  });
+
+  // Confirmar pedido y guardar orden después de Stripe
   router.post("/confirm", authenticateToken, async (req, res) => {
     try {
       const user = await userRepo.findOneBy({ id: req.user.id });
