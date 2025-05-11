@@ -62,7 +62,7 @@ const ServiceDetails = () => {
 
   return (
     <Container sx={{ mt: 5, mb: 4 }}>
-      <Button variant="outlined" onClick={() => navigate(-1)} sx={{ mb: 3 }}>← Volver atrás</Button>
+      <Button variant="outlined" onClick={() => navigate("/home")} sx={{ mb: 3 }}>← Volver atrás</Button>
       <Paper elevation={3} sx={{ p: 4, borderRadius: 3 }}>
         <Typography variant="h4" gutterBottom>{service.title}</Typography>
         <Typography variant="subtitle2" color="text.secondary" gutterBottom>

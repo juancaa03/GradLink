@@ -568,7 +568,7 @@ const Home = () => {
                         desde
                       </Typography>
                       <Typography variant="h5" fontWeight={700} color="#dbe6f3">
-                        ${parseFloat(service.price).toFixed(2)}
+                        €{parseFloat(service.price).toFixed(2)}
                       </Typography>
                     </Box>
 
