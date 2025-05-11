@@ -10,28 +10,9 @@ Este repositorio contiene dos partes: el **backend** (API REST con TypeORM y Str
 * Crear la base de datos `gradlink` en PostgreSQL.
 * Node.js v16+ y npm.
 
-## Variables de entorno
-
-Crea un fichero `.env` en la raíz del backend con el siguiente contenido:
-
-```dotenv
-PORT=4000
-DB_HOST=localhost
-DB_PORT=5432
-DB_USERNAME=postgres
-DB_PASSWORD=postgres
-DB_DATABASE=gradlink
-JWT_SECRET=tujwt
-JWT_VERIF_SECRET=tuverifjwt
-STRIPE_SECRET_KEY=sk_test_tustripesecret
-FRONTEND_URL=http://localhost:3000
-BACKEND_URL=http://localhost:4000
-ALLOWED_INSTITUTIONAL_DOMAINS=array,de,instituciones,permitidas,urv.cat
-```
-
 ## Pasos de instalación
 
-0. **Descargar [Postgres](https://www.postgresql.org/download/)**
+0. **Descargar [Postgres](https://www.postgresql.org/download/) y crear base de datos**
 
    ```bash
    CREATE DATABASE gradlink;
@@ -44,35 +25,52 @@ ALLOWED_INSTITUTIONAL_DOMAINS=array,de,instituciones,permitidas,urv.cat
    cd GradLink
    ```
 
-2. **Instalar dependencias en backend**
+2. **Crea un fichero `.env` en la raíz del backend con el siguiente contenido:**
+
+   ```dotenv
+   PORT=4000
+   DB_HOST=localhost
+   DB_PORT=5432
+   DB_USERNAME=postgres
+   DB_PASSWORD=postgres
+   DB_DATABASE=gradlink
+   JWT_SECRET=tujwt
+   JWT_VERIF_SECRET=tuverifjwt
+   STRIPE_SECRET_KEY=sk_test_tustripesecret
+   FRONTEND_URL=http://localhost:3000
+   BACKEND_URL=http://localhost:4000
+   ALLOWED_INSTITUTIONAL_DOMAINS=array,de,instituciones,permitidas,urv.cat
+   ```
+
+3. **Instalar dependencias en backend**
 
    ```bash
-   cd backend
+   cd gradlink-backend
    npm install
    ```
 
-3. **Ejecutar migraciones**
+4. **Ejecutar migraciones**
 
    ```bash
    npx typeorm migration:run --dataSource src/data-source.js
    ```
 
-4. **Iniciar backend**
+5. **Iniciar backend**
 
    En una terminal:
    ```bash
    npm run dev
    ```
 
-5. **Instalar dependencias en frontend**
+6. **Instalar dependencias en frontend**
 
    En otra terminal:
    ```bash
-   cd frontend
+   cd gradlink-frontend
    npm install
    ```
 
-6. **Iniciar frontend**
+7. **Iniciar frontend**
    ```bash
    npm run dev
    ```
