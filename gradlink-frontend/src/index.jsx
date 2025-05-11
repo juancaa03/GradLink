@@ -2,7 +2,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Dashboard from "./pages/Dashboard";
+import AdminDashboard from "./pages/AdminDashboard";
 import ProtectedRoute from "./ProtectedRoute";
 import ServiceDetails from "./pages/ServiceDetails";
 import CreateService from "./pages/CreateService";
@@ -29,10 +29,10 @@ const AppRouter = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route
-        path="/dashboard"
+        path="/admindashboard"
         element={
           <ProtectedRoute allowedRoles={["admin"]}>
-            <Dashboard />
+            <AdminDashboard />
           </ProtectedRoute>
         }
       />
