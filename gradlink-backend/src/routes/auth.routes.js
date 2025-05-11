@@ -10,7 +10,6 @@ const authRoutes = (dataSource) => {
 
   router.post("/register", async (req, res) => {
     const { name, email, password, institutionalEmail, role } = req.body;
-    if (!role) role = "client";
     const hashed = await bcrypt.hash(password, 10);
 
     try {
@@ -32,7 +31,7 @@ const authRoutes = (dataSource) => {
         password: hashed,
         institutionalEmail: institutionalEmail || null,
         institutionalEmailVerified: false,
-        role
+        role: role || "client",
       });
       const savedUser = await userRepo.save(newUser);
 
