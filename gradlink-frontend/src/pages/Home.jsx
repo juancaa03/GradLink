@@ -137,66 +137,32 @@ export default function Home() {
           <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", color: "#f1ebe3" }}>
             {user?.role !== "client" && (
               <Button
+                variant="outlined"
                 color="#f1ebe3"
                 onClick={() =>
                   window.open(`${window.location.origin}/create-service`, "_blank")
                 }
-                sx={{
-                  background: `
-                    linear-gradient(
-                      to top,
-                      rgba(20, 28, 38, 0.9) 0%,
-                      rgba(30, 40, 55, 0.88) 40%,
-                      rgba(40, 52, 70, 0.85) 100%
-                    )
-                  `,
-                  backdropFilter: "blur(14px)",
-                  backgroundBlendMode: "lighten",
-                  borderRadius: "99px",
-                  border: "1px solid rgba(255, 255, 255, 0.08)",
-                  color: "#f1f4f8",
-                  px: 1.7,
-                  py: 0.5,
+                sx={{ borderRadius: '99px', color: '#f0c987', borderColor: '#f0c987', "&:hover": {
+                  backgroundColor: "#f0c987",
+                  borderColor: "#2c3544",
+                  color: "#2c3544",
                   transition: "all 0.3s ease-in-out",
-                  cursor: "pointer",
-                  boxShadow: "0 6px 36px rgba(255, 255, 255, 0.08)",
-                  "&:hover": {
-                    boxShadow: "0 8px 48px rgba(255, 255, 255, 0.2)",
-                    transform: "translateY(-2px)",
-                  },
-                }}
+                },}}
               >
-                +
+                Publicar
               </Button>
             )}
             {user?.role !== "client" && (
               <Button
+                variant="outlined"
                 color="#11294d"
                 onClick={() => navigate("/my-services")}
-                sx={{
-                  background: `
-                    linear-gradient(
-                      to top,
-                      rgba(20, 28, 38, 0.9) 0%,
-                      rgba(30, 40, 55, 0.88) 40%,
-                      rgba(40, 52, 70, 0.85) 100%
-                    )
-                  `,
-                  backdropFilter: "blur(14px)",
-                  backgroundBlendMode: "lighten",
-                  borderRadius: "99px",
-                  border: "1px solid rgba(255, 255, 255, 0.08)",
-                  color: "#f1f4f8",
-                  px: 1.7,
-                  py: 1,
+                sx={{ borderRadius: '99px', color: '#f0c987', borderColor: '#f0c987', "&:hover": {
+                  backgroundColor: "#f0c987",
+                  borderColor: "#2c3544",
+                  color: "#2c3544",
                   transition: "all 0.3s ease-in-out",
-                  cursor: "pointer",
-                  boxShadow: "0 6px 36px rgba(255, 255, 255, 0.08)",
-                  "&:hover": {
-                    boxShadow: "0 8px 48px rgba(255, 255, 255, 0.2)",
-                    transform: "translateY(-2px)",
-                  },
-                }}
+                },}}
               >
                 Mis servicios
               </Button>
@@ -242,10 +208,25 @@ export default function Home() {
               onChange={(e) => setFilterUser(e.target.value)}
               sx={{
                 width: 170,
-                "& .MuiInputLabel-root.Mui-focused": { color: "#f0c987" },
+                "& .MuiInputLabel-root": {
+                  color: "#f0c987",
+                },
+                "& .MuiInputLabel-root.Mui-focused": {
+                  color: "#f0c987",
+                },
                 "& .MuiOutlinedInput-root": {
-                  "&:hover fieldset": { borderColor: "#f0c987" },
-                  "&.Mui-focused fieldset": { borderColor: "#f0c987" },
+                  "& fieldset": {
+                    borderColor: "#f0c987",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#f0c987",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#f0c987",
+                  },
+                },
+                "& .MuiOutlinedInput-input": {
+                  color: "#f0c987",
                 },
               }}
             />
@@ -262,10 +243,25 @@ export default function Home() {
                   margin: 0,
                 },
                 "& input[type=number]": { MozAppearance: "textfield" },
-                "& .MuiInputLabel-root.Mui-focused": { color: "#f0c987" },
+                "& .MuiInputLabel-root": {
+                  color: "#f0c987",
+                },
+                "& .MuiInputLabel-root.Mui-focused": {
+                  color: "#f0c987",
+                },
                 "& .MuiOutlinedInput-root": {
-                  "&:hover fieldset": { borderColor: "#f0c987" },
-                  "&.Mui-focused fieldset": { borderColor: "#f0c987" },
+                  "& fieldset": {
+                    borderColor: "#f0c987",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#f0c987",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#f0c987",
+                  },
+                },
+                "& .MuiOutlinedInput-input": {
+                  color: "#f0c987",
                 },
               }}
             />
@@ -282,10 +278,25 @@ export default function Home() {
                   margin: 0,
                 },
                 "& input[type=number]": { MozAppearance: "textfield" },
-                "& .MuiInputLabel-root.Mui-focused": { color: "#f0c987" },
+                                "& .MuiInputLabel-root": {
+                  color: "#f0c987",
+                },
+                "& .MuiInputLabel-root.Mui-focused": {
+                  color: "#f0c987",
+                },
                 "& .MuiOutlinedInput-root": {
-                  "&:hover fieldset": { borderColor: "#f0c987" },
-                  "&.Mui-focused fieldset": { borderColor: "#f0c987" },
+                  "& fieldset": {
+                    borderColor: "#f0c987",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#f0c987",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#f0c987",
+                  },
+                },
+                "& .MuiOutlinedInput-input": {
+                  color: "#f0c987",
                 },
               }}
             />
@@ -296,10 +307,25 @@ export default function Home() {
               onChange={(e) => setLocationFilter(e.target.value)}
               sx={{
                 width: 170,
-                "& .MuiInputLabel-root.Mui-focused": { color: "#f0c987" },
+                "& .MuiInputLabel-root": {
+                  color: "#f0c987",
+                },
+                "& .MuiInputLabel-root.Mui-focused": {
+                  color: "#f0c987",
+                },
                 "& .MuiOutlinedInput-root": {
-                  "&:hover fieldset": { borderColor: "#f0c987" },
-                  "&.Mui-focused fieldset": { borderColor: "#f0c987" },
+                  "& fieldset": {
+                    borderColor: "#f0c987",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#f0c987",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#f0c987",
+                  },
+                },
+                "& .MuiOutlinedInput-input": {
+                  color: "#f0c987",
                 },
               }}
             />
