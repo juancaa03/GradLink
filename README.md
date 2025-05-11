@@ -21,20 +21,18 @@ DB_PORT=5432
 DB_USERNAME=postgres
 DB_PASSWORD=postgres
 DB_DATABASE=gradlink
-JWT_SECRET=blabla
-JWT_VERIF_SECRET=blabla
-STRIPE_SECRET_KEY=sk_test_blabla
+JWT_SECRET=tujwt
+JWT_VERIF_SECRET=tuverifjwt
+STRIPE_SECRET_KEY=sk_test_tustripesecret
 FRONTEND_URL=http://localhost:3000
 BACKEND_URL=http://localhost:4000
-ALLOWED_INSTITUTIONAL_DOMAINS=bla,bla,bla,bla
+ALLOWED_INSTITUTIONAL_DOMAINS=array,de,instituciones,permitidas,urv.cat
 ```
 
 ## Pasos de instalación
 
-0. **Descargar Postgres**
+0. **Descargar [Postgres](https://www.postgresql.org/download/)**
 
-  * [Descargar](https://www.postgresql.org/download/)
-  
    ```bash
    CREATE DATABASE gradlink;
    ```
@@ -87,5 +85,6 @@ ALLOWED_INSTITUTIONAL_DOMAINS=bla,bla,bla,bla
   ```text
   4000 0072 4000 0007
   ```
+* Los demas datos pueden ser inventados pero deben ser validos.
 
 ¡A jugar! 🎉
