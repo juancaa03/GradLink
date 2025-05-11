@@ -1,4 +1,4 @@
-# GradLink Practice Setup & Execution
+# GradLink Setup & Execution
 
 Este repositorio contiene dos partes: el **backend** (API REST con TypeORM y Stripe) y el **frontend** (React), cuyo punto de entrada es la sigueinte captura que muestra la pantalla de inicio (*Home*).
 
@@ -65,8 +65,8 @@ ALLOWED_INSTITUTIONAL_DOMAINS=array,de,instituciones,permitidas,urv.cat
    ```
 
 5. **Instalar dependencias en frontend**
-   En otra terminal:
 
+   En otra terminal:
    ```bash
    cd frontend
    npm install
