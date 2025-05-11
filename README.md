@@ -1,6 +1,8 @@
 # GradLink Practice Setup & Execution
 
-Este repositorio contiene dos partes: el **backend** (API REST con TypeORM y Stripe) y el **frontend** (React), cuyo punto de entrada es la capa (`cap`) que muestra la pantalla de inicio (*Home*).
+Este repositorio contiene dos partes: el **backend** (API REST con TypeORM y Stripe) y el **frontend** (React), cuyo punto de entrada es la sigueinte captura que muestra la pantalla de inicio (*Home*).
+
+![Captura de Home](./Home.png)
 
 ## Requisitos previos
 
@@ -30,6 +32,7 @@ ALLOWED_INSTITUTIONAL_DOMAINS=bla,bla,bla,bla
 ## Pasos de instalación
 
 0. **Descargar Postgres**
+
    * `https://www.postgresql.org/download/`
 
    ```bash
@@ -86,5 +89,3 @@ ALLOWED_INSTITUTIONAL_DOMAINS=bla,bla,bla,bla
   ```
 
 ¡A jugar! 🎉
-
-![Captura de Home](./Home.png)
