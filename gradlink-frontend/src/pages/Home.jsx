@@ -29,6 +29,7 @@ import { styled, alpha } from "@mui/material/styles";
 import { useAuth } from "../context/AuthContext";
 import logo from "../assets/Gradlink-logo-light-removebg.png";
 import "../../src/App.css"
+import Footer from "../components/Footer";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -394,7 +395,13 @@ const Home = () => {
             <TextField label="Precio min" type="number" size="small" value={minPrice} onChange={e=>setMinPrice(e.target.value)} sx={{ width: 105 }} />
             <TextField label="Precio max" type="number" size="small" value={maxPrice} onChange={e=>setMaxPrice(e.target.value)} sx={{ width: 107 }} />
             <TextField label="Población" size="small" value={locationFilter} onChange={e=>setLocationFilter(e.target.value)} sx={{ width: 170 }}/>
-            <Button sx={{ borderRadius: '99px' }} variant="outlined" onClick={applyFilters}>Filtrar</Button>
+            <Button 
+            sx={{ borderRadius: '99px', color: '#f0c987', borderColor: '#f0c987', "&:hover": {
+              backgroundColor: "#f0c987",
+              borderColor: "#2c3544",
+              color: "#2c3544",
+              transition: "all 0.3s ease-in-out",
+            },}} variant="outlined" onClick={applyFilters}>Filtrar</Button>
           </Box>
         </Box>
 
@@ -412,6 +419,7 @@ const Home = () => {
               display: "grid",
               gap: 1.5,
               gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+              marginBottom: 10,
             }}
           >
             {services.map((service) => (
@@ -432,6 +440,7 @@ const Home = () => {
                   border: "1px solid rgba(255, 255, 255, 0.08)",
                   color: "#f1f4f8",
                   p: 2,
+                  marginBottom: 2,
                   maxWidth: 320,
                   transition: "all 0.3s ease-in-out",
                   cursor: "pointer",
@@ -445,7 +454,6 @@ const Home = () => {
                 onClick={() => navigate(`/service/${service.id}`)}
               >
                 <CardContent sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-                  {/* Usuario alineado a la izquierda */}
                   <Box display="flex" alignItems="center" gap={1}>
                     <Avatar sx={{ bgcolor: "#545d6a", width: 32, height: 32, fontSize: 16 }}>
                       {service.user.name[0]}
@@ -519,6 +527,7 @@ const Home = () => {
           </Box>
         )}
       </Container>
+      <Footer />
     </>
   );
 };
