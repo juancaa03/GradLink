@@ -134,7 +134,7 @@ export default function Home() {
             gap: 2,
           }}
         >
-          <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", color: "#f1ebe3" }}>
+          <Box sx={{ display: "flex", gap: 2, flexWrap: "nowrap", color: "#f1ebe3" }}>
             {user?.role !== "client" && (
               <Button
                 variant="outlined"
@@ -164,43 +164,26 @@ export default function Home() {
                   transition: "all 0.3s ease-in-out",
                 },}}
               >
-                Mis servicios
+                Servicios 
               </Button>
             )}
             {user?.role === "admin" && (
               <Button
                 color="#11294d"
+                variant="outlined"
                 onClick={() => navigate("/admindashboard")}
-                sx={{
-                  background: `
-                    linear-gradient(
-                      to top,
-                      rgba(20, 28, 38, 0.9) 0%,
-                      rgba(30, 40, 55, 0.88) 40%,
-                      rgba(40, 52, 70, 0.85) 100%
-                    )
-                  `,
-                  backdropFilter: "blur(14px)",
-                  backgroundBlendMode: "lighten",
-                  borderRadius: "99px",
-                  border: "1px solid rgba(255, 255, 255, 0.08)",
-                  color: "#f1f4f8",
-                  px: 1.7,
-                  py: 1,
+                sx={{ borderRadius: '99px', color: '#f0c987', borderColor: '#f0c987', "&:hover": {
+                  backgroundColor: "#f0c987",
+                  borderColor: "#2c3544",
+                  color: "#2c3544",
                   transition: "all 0.3s ease-in-out",
-                  cursor: "pointer",
-                  boxShadow: "0 6px 36px rgba(255, 255, 255, 0.08)",
-                  "&:hover": {
-                    boxShadow: "0 8px 48px rgba(255, 255, 255, 0.2)",
-                    transform: "translateY(-2px)",
-                  },
-                }}
+                },}}
               >
                 Dashboard
               </Button>
             )}
           </Box>
-          <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", px: 1.9, py: 0.5 }}>
+          <Box sx={{ display: "flex", gap: 2, flexWrap: "nowrap", px: 1.9, py: 0.5 }}>
             <TextField
               label="Usuario"
               size="small"

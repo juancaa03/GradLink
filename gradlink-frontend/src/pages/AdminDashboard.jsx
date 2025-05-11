@@ -105,13 +105,13 @@ export default function AdminDashboard() {
         <Box sx={{ mb: 4, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 2 }}>
           <Typography
             variant="h5"
-            sx={{ fontWeight: "bold", color: "#ffff00" }}
+            sx={{ fontWeight: "bold", color: "#f0c987" }}
           >
             Panel de Administración
           </Typography>
           <Button 
-              sx={{ borderRadius: '99px', color: '#ffff00', borderColor: '#ffff00', "&:hover": {
-                backgroundColor: "#ffff00",
+              sx={{ borderRadius: '99px', color: '#f0c987', borderColor: '#f0c987', "&:hover": {
+                backgroundColor: "#f0c987",
                 borderColor: "#2c3544",
                 color: "#2c3544",
                 transition: "all 0.3s ease-in-out",
