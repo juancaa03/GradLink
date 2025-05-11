@@ -23,6 +23,8 @@ const ChatWithUser = () => {
   const [content, setContent] = useState("");
   const messagesEndRef = useRef();
   const navigate = useNavigate();
+  const scrollContainerRef = useRef();
+
 
   // 1. Marcar mensajes como leídos al entrar
   useEffect(() => {
@@ -64,10 +66,15 @@ const ChatWithUser = () => {
   }, [userId, token]);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  if (!scrollContainerRef.current) return;
+  scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight;
+};
 
-  useEffect(scrollToBottom, [messages]);
+
+  useEffect(() => {
+  scrollToBottom();
+}, [messages]);
+
 
   const handleSend = async () => {
     if (!content.trim()) return;
@@ -121,7 +128,7 @@ const ChatWithUser = () => {
             }
           </Typography>
 
-          <Box sx={{ flexGrow: 1, overflowY: "auto", mb: 2, pr: 1 }}>
+          <Box ref={scrollContainerRef} sx={{ flexGrow: 1, overflowY: "auto", mb: 2, pr: 1 }}>
             <Stack spacing={1}>
               {messages.map((msg) => (
                 <Box
