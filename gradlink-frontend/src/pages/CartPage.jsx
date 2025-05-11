@@ -15,6 +15,8 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useNavigate } from "react-router-dom";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 const CartPage = () => {
   const { token } = useAuth();
@@ -102,49 +104,58 @@ const CartPage = () => {
   }
 
   return (
-    <Container sx={{ mt: 5 }}>
-      <Typography variant="h5" gutterBottom>
-        Tu carrito de la compra
-      </Typography>
+    <>
+      <Navbar />
+      <Container sx={{ height: "100vh", mt: 15 }}>
+        <Typography variant="h5" gutterBottom>
+          Tu carrito de la compra
+        </Typography>
 
-      {cartItems.length === 0 ? (
-        <Typography variant="body2">Tu carrito está vacío.</Typography>
-      ) : (
-        <Paper sx={{ p: 3, borderRadius: 3 }}>
-          <List>
-            {cartItems.map((item) => (
-              <ListItem key={item.service.id} secondaryAction={
-                <IconButton edge="end" onClick={() => handleRemove(item.service.id)}>
-                  <DeleteIcon />
-                </IconButton>
-              }>
-                <ListItemText
-                  primary={item.service.title}
-                  secondary={`Precio: ${parseFloat(item.service.price).toFixed(2)} €`}
-                />
-              </ListItem>
-            ))}
-          </List>
+        {cartItems.length === 0 ? (
+          <Typography variant="body2">Tu carrito está vacío.</Typography>
+        ) : (
+          <Paper sx={{ p: 3, borderRadius: 3 }}>
+            <List>
+              {cartItems.map((item) => (
+                <ListItem key={item.service.id} secondaryAction={
+                  <IconButton edge="end" onClick={() => handleRemove(item.service.id)}>
+                    <DeleteIcon />
+                  </IconButton>
+                }>
+                  <ListItemText
+                    primary={item.service.title}
+                    secondary={`Precio: ${parseFloat(item.service.price).toFixed(2)} €`}
+                  />
+                </ListItem>
+              ))}
+            </List>
 
-          <Divider sx={{ my: 2 }} />
+            <Divider sx={{ my: 2 }} />
 
-          <Typography variant="h6" sx={{ mb: 2 }}>
-            Total: {total.toFixed(2)} €
-          </Typography>
+            <Typography variant="h6" sx={{ mb: 2 }}>
+              Total: {total.toFixed(2)} €
+            </Typography>
 
-          <Box sx={{ display: "flex", gap: 2 }}>
-            <Button variant="contained" color="primary" onClick={handleCheckout}>
-                Proceder al pago
-            </Button>
-            <Button variant="outlined" color="error" onClick={handleClearCart}>
-                Vaciar carrito
-            </Button>
-          </Box>
-        </Paper>
-      )}
+            <Box sx={{ display: "flex", gap: 2 }}>
+              <Button variant="contained" color="primary" onClick={handleCheckout}>
+                  Proceder al pago
+              </Button>
+              <Button variant="outlined" color="error" onClick={handleClearCart}>
+                  Vaciar carrito
+              </Button>
+            </Box>
+          </Paper>
+        )}
 
-      <Button variant="outlined" sx={{ mt: 3 }} onClick={() => navigate("/")}>← Volver al inicio</Button>
-    </Container>
+        <Button variant="outlined" sx={{ mt: 3, borderRadius: '99px', color: '#f0c987', borderColor: '#f0c987', "&:hover": {
+              backgroundColor: "#f0c987",
+              borderColor: "#2c3544",
+              color: "#2c3544",
+              transition: "all 0.3s ease-in-out",
+            },}} onClick={() => navigate("/")}>← Volver al inicio</Button>
+      </Container>
+      <Footer />
+    </>
   );
 };
 

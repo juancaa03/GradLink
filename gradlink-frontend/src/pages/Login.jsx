@@ -10,6 +10,7 @@ import {
   Link,
   Paper,
 } from "@mui/material";
+import Footer from "../components/Footer";
 
 const Login = () => {
   const { login } = useAuth();
@@ -42,40 +43,43 @@ const Login = () => {
   };
 
   return (
-    <Container maxWidth="sm">
-      <Paper elevation={3} sx={{ mt: 8, p: 4 }}>
-        <Typography variant="h5" component="h1" gutterBottom align="center">
-          Inicia sesión
-        </Typography>
-        <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-          <TextField
-            label="Correo"
-            type="email"
-            name="email"
-            value={form.email}
-            onChange={handleChange}
-            required
-          />
-          <TextField
-            label="Contraseña"
-            type="password"
-            name="password"
-            value={form.password}
-            onChange={handleChange}
-            required
-          />
-          <Button variant="contained" color="primary" type="submit">
-            Entrar
-          </Button>
-        </Box>
-        <Typography variant="body2" align="center" sx={{ mt: 2 }}>
-          ¿No tienes cuenta?{" "}
-          <Link component={RouterLink} to="/register">
-            Regístrate aquí
-          </Link>
-        </Typography>
-      </Paper>
-    </Container>
+    <>
+      <Container  sx={{ height: "100vh" }} maxWidth="sm">
+        <Paper elevation={3} sx={{ mt: 8, p: 4 }}>
+          <Typography variant="h5" component="h1" gutterBottom align="center">
+            Inicia sesión
+          </Typography>
+          <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            <TextField
+              label="Correo"
+              type="email"
+              name="email"
+              value={form.email}
+              onChange={handleChange}
+              required
+            />
+            <TextField
+              label="Contraseña"
+              type="password"
+              name="password"
+              value={form.password}
+              onChange={handleChange}
+              required
+            />
+            <Button variant="contained" color="primary" type="submit">
+              Entrar
+            </Button>
+          </Box>
+          <Typography variant="body2" align="center" sx={{ mt: 2 }}>
+            ¿No tienes cuenta?{" "}
+            <Link component={RouterLink} to="/register">
+              Regístrate aquí
+            </Link>
+          </Typography>
+        </Paper>
+      </Container>
+      <Footer />
+    </>
   );
 };
 

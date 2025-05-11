@@ -105,7 +105,12 @@ const ProfilePage = () => {
         <Typography variant="h5" gutterBottom>
           Mi perfil
         </Typography>
-        <Button variant="outlined" onClick={() => navigate("/")}>
+        <Button sx={{ borderRadius: '99px', color: '#f0c987', borderColor: '#f0c987', "&:hover": {
+              backgroundColor: "#f0c987",
+              borderColor: "#2c3544",
+              color: "#2c3544",
+              transition: "all 0.3s ease-in-out",
+            },}} variant="outlined" onClick={() => navigate("/")}>
           Volver al inicio
         </Button>
       </Box>

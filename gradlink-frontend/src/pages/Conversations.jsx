@@ -17,6 +17,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 const Conversations = () => {
   const { token } = useAuth();
@@ -78,81 +80,90 @@ const Conversations = () => {
   }
 
   return (
-    <Container maxWidth="sm" sx={{ mt: 5 }}>
-      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 3 }}>
-        <Typography variant="h5">Tus conversaciones</Typography>
-        <Button variant="outlined" onClick={() => navigate("/")}>
-          ← Volver al inicio
-        </Button>
-      </Box>
+    <>
+      <Navbar />
+      <Container maxWidth="sm" sx={{ height: "100vh", mt: 15 }}>
+        <Box sx={{ display: "flex", justifyContent: "space-between", mb: 3 }}>
+          <Typography variant="h5">Tus conversaciones</Typography>
+          <Button sx={{ borderRadius: '99px', color: '#f0c987', borderColor: '#f0c987', "&:hover": {
+              backgroundColor: "#f0c987",
+              borderColor: "#2c3544",
+              color: "#2c3544",
+              transition: "all 0.3s ease-in-out",
+            },}} variant="outlined" onClick={() => navigate("/")}>
+            ← Volver al inicio
+          </Button>
+        </Box>
 
-      {conversations.length === 0 ? (
-        <Typography variant="body2">No has iniciado ninguna conversación aún.</Typography>
-      ) : (
-        <Paper>
-          <List>
-            {conversations.map((conv, index) => (
-              <div key={conv.user.id}>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    px: 1,
-                    py: 0.5,
-                  }}
-                >
-                  <ListItemButton
-                    sx={{ flex: 1 }}
-                    onClick={() => navigate(`/chat/${conv.user.id}`)}
+        {conversations.length === 0 ? (
+          <Typography variant="body2">No has iniciado ninguna conversación aún.</Typography>
+        ) : (
+          <Paper>
+            <List>
+              {conversations.map((conv, index) => (
+                <div key={conv.user.id}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      px: 1,
+                      py: 0.5,
+                    }}
                   >
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        width: "100%",
-                      }}
+                    <ListItemButton
+                      sx={{ flex: 1 }}
+                      onClick={() => navigate(`/chat/${conv.user.id}`)}
                     >
-                      <ListItemText
-                        primary={conv.user.name}
-                        secondary={conv.lastMessage}
-                      />
-                      {conv.hasUnread && (
-                        <Badge
-                          color="error"
-                          variant="dot"
-                          sx={{
-                            "& .MuiBadge-badge": {
-                              right: 0,
-                              top: "50%",
-                              transform: "translateY(-50%)",
-                            },
-                          }}
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          width: "100%",
+                        }}
+                      >
+                        <ListItemText
+                          primary={conv.user.name}
+                          secondary={conv.lastMessage}
                         />
-                      )}
-                    </Box>
-                  </ListItemButton>
+                        {conv.hasUnread && (
+                          <Badge
+                            color="error"
+                            variant="dot"
+                            sx={{
+                              "& .MuiBadge-badge": {
+                                right: 0,
+                                top: "50%",
+                                transform: "translateY(-50%)",
+                              },
+                            }}
+                          />
+                        )}
+                      </Box>
+                    </ListItemButton>
 
-                  <Tooltip title="Borrar conversación">
-                    <IconButton
-                      onClick={() => handleDelete(conv.user.id)}
-                      size="small"
-                      edge="end"
-                      sx={{ ml: 1 }}
-                    >
-                      <DeleteOutlineIcon fontSize="small" />
-                    </IconButton>
-                  </Tooltip>
-                </Box>
+                    <Tooltip title="Borrar conversación">
+                      <IconButton
+                        onClick={() => handleDelete(conv.user.id)}
+                        size="small"
+                        edge="end"
+                        sx={{ ml: 1 }}
+                      >
+                        <DeleteOutlineIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                  </Box>
 
-                {index < conversations.length - 1 && <Divider />}
-              </div>
-            ))}
-          </List>
-        </Paper>
-      )}
-    </Container>
+                  {index < conversations.length - 1 && <Divider />}
+                </div>
+              ))}
+            </List>
+          </Paper>
+        )}
+      </Container>
+      <Footer />
+    </>
   );
 };
 

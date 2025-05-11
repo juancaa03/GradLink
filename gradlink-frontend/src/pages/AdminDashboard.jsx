@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import Navbar from "../components/Navbar";
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
@@ -98,77 +99,80 @@ export default function AdminDashboard() {
 };
 
   return (
-    <Box sx={{ p: 4 }}>
-      <Box sx={{ mb: 4, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 2 }}>
-        <Typography
-          variant="h4"
-          sx={{ mb: 4, fontWeight: "bold", color: "#ffff00" }}
-        >
-          Panel de Administración
-        </Typography>
-        <Button 
-            sx={{ transform: "translateY(-15px)", borderRadius: '99px', color: '#ffff00', borderColor: '#ffff00', "&:hover": {
-              backgroundColor: "#ffff00",
-              borderColor: "#2c3544",
-              color: "#2c3544",
-              transition: "all 0.3s ease-in-out",
-            },}} variant="outlined" onClick={() => navigate("/home")}>Volver</Button>
-      </Box>
+    <>
+      <Navbar />
+      <Box sx={{ mt: 10, p: 4 }}>
+        <Box sx={{ mb: 4, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 2 }}>
+          <Typography
+            variant="h5"
+            sx={{ fontWeight: "bold", color: "#ffff00" }}
+          >
+            Panel de Administración
+          </Typography>
+          <Button 
+              sx={{ borderRadius: '99px', color: '#ffff00', borderColor: '#ffff00', "&:hover": {
+                backgroundColor: "#ffff00",
+                borderColor: "#2c3544",
+                color: "#2c3544",
+                transition: "all 0.3s ease-in-out",
+              },}} variant="outlined" onClick={() => navigate("/home")}>Volver</Button>
+        </Box>
 
-      <TableContainer component={Paper} sx={{ boxShadow: 3, borderRadius: 2 }}>
-        <Table>
-          <TableHead>
-            <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
-              <TableCell sx={{ fontWeight: "bold" }}>ID Pedido</TableCell>
-              <TableCell sx={{ fontWeight: "bold" }}>Fecha creación</TableCell>
-              <TableCell sx={{ fontWeight: "bold" }}>Cliente</TableCell>
-              <TableCell sx={{ fontWeight: "bold" }}>Servicios (id)</TableCell>
-              <TableCell sx={{ fontWeight: "bold" }}>Estado</TableCell>
-              <TableCell sx={{ fontWeight: "bold" }}></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {orders.map((order) => (
-              <TableRow
-                key={order.id}
-                sx={{
-                  "&:hover": { backgroundColor: "rgba(32,48,64,0.05)" },
-                }}
-              >
-                <TableCell>{order.id}</TableCell>
-                <TableCell>{formatDate(order.createdAt)}</TableCell>
-                <TableCell>{order.user.name}</TableCell>
-                <TableCell>
-                  {order.service ? (
-                    <Typography variant="body2">
-                      {order.service.title} ({order.service.id})
-                    </Typography>
-                  ) : (
-                    <Typography variant="body2" color="textSecondary">
-                      Sin servicio
-                    </Typography>
-                  )}
-                </TableCell>
-                <TableCell>{order.status}</TableCell>
-                <TableCell>
-                  <Select
-                    value={order.status}
-                    onChange={(e) =>
-                      updateOrderStatus(order.id, e.target.value)
-                    }
-                    size="small"
-                    sx={{ minWidth: 140 }}
-                  >
-                    <MenuItem value="processing">Processing</MenuItem>
-                    <MenuItem value="delivering">Delivering</MenuItem>
-                    <MenuItem value="delivered">Delivered</MenuItem>
-                  </Select>
-                </TableCell>
+        <TableContainer component={Paper} sx={{ boxShadow: 3, borderRadius: 2 }}>
+          <Table>
+            <TableHead>
+              <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
+                <TableCell sx={{ fontWeight: "bold" }}>ID Pedido</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>Fecha creación</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>Cliente</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>Servicios (id)</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>Estado</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}></TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Box>
+            </TableHead>
+            <TableBody>
+              {orders.map((order) => (
+                <TableRow
+                  key={order.id}
+                  sx={{
+                    "&:hover": { backgroundColor: "rgba(32,48,64,0.05)" },
+                  }}
+                >
+                  <TableCell>{order.id}</TableCell>
+                  <TableCell>{formatDate(order.createdAt)}</TableCell>
+                  <TableCell>{order.user.name}</TableCell>
+                  <TableCell>
+                    {order.service ? (
+                      <Typography variant="body2">
+                        {order.service.title} ({order.service.id})
+                      </Typography>
+                    ) : (
+                      <Typography variant="body2" color="textSecondary">
+                        Sin servicio
+                      </Typography>
+                    )}
+                  </TableCell>
+                  <TableCell>{order.status}</TableCell>
+                  <TableCell>
+                    <Select
+                      value={order.status}
+                      onChange={(e) =>
+                        updateOrderStatus(order.id, e.target.value)
+                      }
+                      size="small"
+                      sx={{ minWidth: 140 }}
+                    >
+                      <MenuItem value="processing">Processing</MenuItem>
+                      <MenuItem value="delivering">Delivering</MenuItem>
+                      <MenuItem value="delivered">Delivered</MenuItem>
+                    </Select>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Box>
+    </>
   );
 }

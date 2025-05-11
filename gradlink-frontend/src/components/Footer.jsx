@@ -12,7 +12,7 @@ export default function Footer() {
       component="footer"
       sx={{
         width: "100vw",
-        position: "relative",
+        position: "absolute",
         left: "50%",
         right: "50%",
         marginLeft: "-50vw",
@@ -22,9 +22,10 @@ export default function Footer() {
         pt: 6,
         pb: 3,
         mt: 8,
+        mb: 0,
       }}
     >
-      <Box sx={{ px: { xs: 2, md: 4 }, mx: "auto", maxWidth: 1920 }}>
+      <Box sx={{ px: { xs: 2, md: 4 }, mx: "auto", maxWidth: "80%" }}>
         <Box
           sx={{
             display: "flex",

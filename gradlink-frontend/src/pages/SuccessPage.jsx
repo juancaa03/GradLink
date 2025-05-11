@@ -62,7 +62,12 @@ const SuccessPage = () => {
           ? error
           : "Tus servicios han sido registrados. Puedes revisarlos en tu historial próximamente."}
       </Typography>
-      <Button variant="contained" onClick={() => navigate("/")}>
+      <Button sx={{ borderRadius: '99px', color: '#f0c987', borderColor: '#f0c987', "&:hover": {
+              backgroundColor: "#f0c987",
+              borderColor: "#2c3544",
+              color: "#2c3544",
+              transition: "all 0.3s ease-in-out",
+            },}} variant="contained" onClick={() => navigate("/")}>
         Volver al inicio
       </Button>
     </Container>

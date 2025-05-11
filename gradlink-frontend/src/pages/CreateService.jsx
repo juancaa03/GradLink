@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
+import Footer from "../components/Footer";
 
 const CreateService = () => {
   const { token } = useAuth();
@@ -74,102 +75,105 @@ const CreateService = () => {
   };
 
   return (
-    <Container maxWidth="sm" sx={{ mt: 6 }}>
-      <Paper sx={{ p: 4, borderRadius: 3 }}>
-        <Typography variant="h5" gutterBottom>
-          Publicar un nuevo servicio
-        </Typography>
+    <>
+      <Container maxWidth="sm" sx={{ mt: 6 }}>
+        <Paper sx={{ p: 4, borderRadius: 3 }}>
+          <Typography variant="h5" gutterBottom>
+            Publicar un nuevo servicio
+          </Typography>
 
-        <Box
-          component="form"
-          onSubmit={handleSubmit}
-          sx={{ display: "flex", flexDirection: "column", gap: 3 }}
-        >
-          <TextField
-            label="Título"
-            name="title"
-            value={form.title}
-            onChange={handleChange}
-            required
-          />
-          <TextField
-            label="Descripción"
-            name="description"
-            value={form.description}
-            onChange={handleChange}
-            multiline
-            rows={4}
-            required
-          />
-          <TextField
-            label="Precio (€)"
-            name="price"
-            value={form.price}
-            onChange={handleChange}
-            type="number"
-            inputProps={{ step: "0.01", min: 0 }}
-            required
-          />
-          <TextField
-            label="Población o Online"
-            name="location"
-            value={form.location}
-            onChange={handleChange}
-            placeholder="Ciudad/Localidad o Online"
-            fullWidth
-            required
-          />
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            sx={{ display: "flex", flexDirection: "column", gap: 3 }}
+          >
+            <TextField
+              label="Título"
+              name="title"
+              value={form.title}
+              onChange={handleChange}
+              required
+            />
+            <TextField
+              label="Descripción"
+              name="description"
+              value={form.description}
+              onChange={handleChange}
+              multiline
+              rows={4}
+              required
+            />
+            <TextField
+              label="Precio (€)"
+              name="price"
+              value={form.price}
+              onChange={handleChange}
+              type="number"
+              inputProps={{ step: "0.01", min: 0 }}
+              required
+            />
+            <TextField
+              label="Población o Online"
+              name="location"
+              value={form.location}
+              onChange={handleChange}
+              placeholder="Ciudad/Localidad o Online"
+              fullWidth
+              required
+            />
 
-          <Box>
-            <Typography variant="subtitle1" sx={{ mb: 1 }}>
-              Etiquetas
-            </Typography>
-            <Stack direction="row" spacing={1} sx={{ flexWrap: "wrap", mb: 1 }}>
-              {form.tags.map((tag) => (
-                <Chip
-                  key={tag.name}
-                  label={tag.name}
-                  onDelete={() => removeTag(tag)}
+            <Box>
+              <Typography variant="subtitle1" sx={{ mb: 1 }}>
+                Etiquetas
+              </Typography>
+              <Stack direction="row" spacing={1} sx={{ flexWrap: "wrap", mb: 1 }}>
+                {form.tags.map((tag) => (
+                  <Chip
+                    key={tag.name}
+                    label={tag.name}
+                    onDelete={() => removeTag(tag)}
+                  />
+                ))}
+              </Stack>
+              <Box sx={{ display: "flex", gap: 1 }}>
+                <TextField
+                  label="Nueva etiqueta"
+                  value={newTag}
+                  onChange={(e) => setNewTag(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      addTag();
+                    }
+                  }}
                 />
-              ))}
-            </Stack>
-            <Box sx={{ display: "flex", gap: 1 }}>
-              <TextField
-                label="Nueva etiqueta"
-                value={newTag}
-                onChange={(e) => setNewTag(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-                    addTag();
+                <IconButton onClick={addTag} color="primary">
+                  <AddIcon />
+                </IconButton>
+              </Box>
+            </Box>
+
+            <Box sx={{ display: "flex", gap: 2 }}>
+              <Button variant="contained" color="primary" type="submit">
+                Publicar servicio
+              </Button>
+              <Button
+                variant="outlined"
+                color="error"
+                onClick={() => {
+                  if (confirm("¿Seguro que quieres cancelar la creación?")) {
+                    window.close();
                   }
                 }}
-              />
-              <IconButton onClick={addTag} color="primary">
-                <AddIcon />
-              </IconButton>
+              >
+                Cancelar
+              </Button>
             </Box>
           </Box>
-
-          <Box sx={{ display: "flex", gap: 2 }}>
-            <Button variant="contained" color="primary" type="submit">
-              Publicar servicio
-            </Button>
-            <Button
-              variant="outlined"
-              color="error"
-              onClick={() => {
-                if (confirm("¿Seguro que quieres cancelar la creación?")) {
-                  navigate("/");
-                }
-              }}
-            >
-              Cancelar
-            </Button>
-          </Box>
-        </Box>
-      </Paper>
-    </Container>
+        </Paper>
+      </Container>
+      <Footer />
+    </>
   );
 };
 

@@ -27,9 +27,9 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import { styled, alpha } from "@mui/material/styles";
 import { useAuth } from "../context/AuthContext";
-import logo from "../assets/Gradlink-logo-light-removebg.png";
 import "../../src/App.css"
 import Footer from "../components/Footer";
+import Navbar from "../components/Navbar";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -65,11 +65,10 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const Home = () => {
-  const { logout, login, user, token, hasUnread, setHasUnread } = useAuth();
+  const { login, user, token, setHasUnread } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const [services, setServices] = useState([]);
   const [cartCount, setCartCount] = useState(0);
-  const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [minPrice, setMinPrice] = useState("");
@@ -99,20 +98,6 @@ const Home = () => {
         navigate("/login");
       });
   }, [login, navigate, searchParams, setSearchParams]);
-
-
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
-  };
-
-  const handleMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
 
   useEffect(() => {
     const checkUnread = async () => {
@@ -178,45 +163,6 @@ const Home = () => {
     fetchAllServices();
   }, [token]);
 
-  const handleSearchChange = async (e) => {
-    const query = e.target.value;
-    setSearchTerm(query);
-
-    if (query.length < 2) {
-      try {
-        const res = await fetch("http://localhost:4000/api/services", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        if (!res.ok) throw new Error("Error cargando servicios");
-        const data = await res.json();
-        setServices(data);
-      } catch (err) {
-        console.error(err.message);
-      }
-      return;
-    }
-
-    try {
-      const res = await fetch(
-        `http://localhost:4000/api/services?q=${encodeURIComponent(query)}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (!res.ok) throw new Error("Error buscando servicios");
-
-      const data = await res.json();
-      setServices(data);
-    } catch (err) {
-      console.error(err.message);
-    }
-  };
-
   const applyFilters = async () => {
     const params = new URLSearchParams();
     if (searchTerm) params.append("q", searchTerm);
@@ -232,79 +178,7 @@ const Home = () => {
 
   return (
     <>
-      <AppBar
-        position="fixed"
-        elevation={4}
-        sx={{
-          top: 16,
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "90%",
-          maxWidth: 960,
-          backgroundImage: "linear-gradient(to right, #2c3e50, #bdc3c7)",
-          color: "#fdf5e7",
-          borderRadius: "99px",
-          padding: "0.25rem 1rem",
-          backdropFilter: "blur(10px)",
-          boxShadow: "0 8px 32px rgba(0, 0, 0, 0.25)",
-        }}>
-        <Toolbar sx={{ position: "relative", minHeight: "56px" }}>
-          {/* Sección izquierda */}
-          <Box sx={{ flexGrow: 1, display: "flex", alignItems: "center" }}>
-            <Box
-              component="img"
-              src={logo}
-              alt="GradLink Logo"
-              sx={{
-                height: 48,
-                width: "auto",
-                objectFit: "contain",
-                cursor: "pointer",
-              }}
-            />
-          </Box>
-
-          {/* Sección central: Buscador */}
-          <Box sx={{ position: "absolute", left: "50%", transform: "translateX(-50%)", width: "50%" }}>
-            <Search>
-              <SearchIconWrapper>
-                <SearchIcon />
-              </SearchIconWrapper>
-              <StyledInputBase
-                placeholder="Buscar servicios…"
-                inputProps={{ "aria-label": "search" }}
-                value={searchTerm}
-                onChange={handleSearchChange}
-              />
-            </Search>
-          </Box>
-
-          {/* Sección derecha: iconos */}
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <IconButton color="inherit" onClick={() => navigate("/conversations")}>
-              {hasUnread ? <MarkChatUnreadOutlinedIcon /> : <ChatBubbleOutlineIcon />}
-            </IconButton>
-            <IconButton color="inherit" onClick={() => navigate("/cart")}>
-              <Badge badgeContent={cartCount} color="error">
-                <ShoppingCartIcon />
-              </Badge>
-            </IconButton>
-            <IconButton color="inherit" onClick={handleMenuOpen}>
-              <AccountCircle />
-            </IconButton>
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleMenuClose}
-            >
-              <MenuItem onClick={() => { handleMenuClose(); navigate("/profile"); }}>Perfil</MenuItem>
-              <MenuItem onClick={() => { handleMenuClose(); navigate("/orders"); }}>Mis compras</MenuItem>
-              <MenuItem onClick={handleLogout}>Cerrar sesión</MenuItem>
-            </Menu>
-          </Box>
-        </Toolbar>
-      </AppBar>
-
+      <Navbar />
       <Container sx={{ mt: 4, paddingTop: "96px" }}>
         <Typography variant="h4" 
           sx={{ fontWeight: 'bold', color: '#f0f4f8', textAlign: 'center', mb: 2, mt: 2 }}>

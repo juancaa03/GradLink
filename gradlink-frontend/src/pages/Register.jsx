@@ -10,6 +10,7 @@ import {
   Link,
   Paper,
 } from "@mui/material";
+import Footer from "../components/Footer";
 
 const Register = () => {
   const { login } = useAuth();
@@ -54,59 +55,62 @@ const Register = () => {
   };
 
   return (
-    <Container maxWidth="sm">
-      <Paper elevation={3} sx={{ mt: 8, p: 4 }}>
-        <Typography variant="h5" component="h1" gutterBottom align="center">
-          Crear cuenta
-        </Typography>
-        <Box
-          component="form"
-          onSubmit={handleSubmit}
-          sx={{ display: "flex", flexDirection: "column", gap: 2 }}
-        >
-          <TextField
-            label="Nombre"
-            name="name"
-            value={form.name}
-            onChange={handleChange}
-            required
-          />
-          <TextField
-            label="Correo"
-            type="email"
-            name="email"
-            value={form.email}
-            onChange={handleChange}
-            required
-          />
-          <TextField
-            label="Contraseña"
-            type="password"
-            name="password"
-            value={form.password}
-            onChange={handleChange}
-            required
-          />
-          <TextField
-            label="Correo institucional (opcional)"
-            type="email"
-            name="institutionalEmail"
-            value={form.institutionalEmail}
-            onChange={handleChange}
-            placeholder="ej: usuario@universidad.edu"
-          />
-          <Button variant="contained" color="primary" type="submit">
-            Registrarse
-          </Button>
-        </Box>
-        <Typography variant="body2" align="center" sx={{ mt: 2 }}>
-          ¿Ya tienes cuenta?{" "}
-          <Link component={RouterLink} to="/login">
-            Inicia sesión aquí
-          </Link>
-        </Typography>
-      </Paper>
-    </Container>
+    <>
+      <Container sx={{ height: "100vh" }} maxWidth="sm">
+        <Paper elevation={3} sx={{ mt: 8, p: 4 }}>
+          <Typography variant="h5" component="h1" gutterBottom align="center">
+            Crear cuenta
+          </Typography>
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+          >
+            <TextField
+              label="Nombre"
+              name="name"
+              value={form.name}
+              onChange={handleChange}
+              required
+            />
+            <TextField
+              label="Correo"
+              type="email"
+              name="email"
+              value={form.email}
+              onChange={handleChange}
+              required
+            />
+            <TextField
+              label="Contraseña"
+              type="password"
+              name="password"
+              value={form.password}
+              onChange={handleChange}
+              required
+            />
+            <TextField
+              label="Correo institucional (opcional)"
+              type="email"
+              name="institutionalEmail"
+              value={form.institutionalEmail}
+              onChange={handleChange}
+              placeholder="ej: usuario@universidad.edu"
+            />
+            <Button variant="contained" color="primary" type="submit">
+              Registrarse
+            </Button>
+          </Box>
+          <Typography variant="body2" align="center" sx={{ mt: 2 }}>
+            ¿Ya tienes cuenta?{" "}
+            <Link component={RouterLink} to="/login">
+              Inicia sesión aquí
+            </Link>
+          </Typography>
+        </Paper>
+      </Container>
+      <Footer />
+    </>
   );
 };
 

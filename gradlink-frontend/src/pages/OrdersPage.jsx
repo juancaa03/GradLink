@@ -14,6 +14,8 @@ import {
   Chip,
   Button,
 } from "@mui/material";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 const OrdersPage = () => {
   const { token } = useAuth();
@@ -51,35 +53,44 @@ const OrdersPage = () => {
   }
 
   return (
-    <Container sx={{ mt: 5 }}>
-      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
-       <Typography variant="h5" gutterBottom>Mis compras</Typography>
-       <Button variant="outlined" onClick={() => navigate("/")}>
-          Volver al inicio
-       </Button>
-      </Box>
+    <>
+      <Navbar />
+      <Container sx={{ height: "100vh", mt: 15 }}>
+        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
+        <Typography variant="h5" gutterBottom>Mis compras</Typography>
+        <Button sx={{ borderRadius: '99px', color: '#f0c987', borderColor: '#f0c987', "&:hover": {
+              backgroundColor: "#f0c987",
+              borderColor: "#2c3544",
+              color: "#2c3544",
+              transition: "all 0.3s ease-in-out",
+            },}} variant="outlined" onClick={() => navigate("/")}>
+            Volver al inicio
+        </Button>
+        </Box>
 
-      {orders.length === 0 ? (
-        <Typography variant="body2">Aún no has realizado ninguna compra.</Typography>
-      ) : (
-        <Paper sx={{ p: 3, borderRadius: 3 }}>
-          <List>
-            {orders.map((order, i) => (
-              <div key={order.id}>
-                <ListItem>
-                  <ListItemText
-                    primary={order.service?.title || "Servicio desconocido"}
-                    secondary={`Fecha: ${new Date(order.createdAt).toLocaleString()}`}
-                  />
-                  <Chip label={order.status} color="primary" size="small" />
-                </ListItem>
-                {i < orders.length - 1 && <Divider />}
-              </div>
-            ))}
-          </List>
-        </Paper>
-      )}
-    </Container>
+        {orders.length === 0 ? (
+          <Typography variant="body2">Aún no has realizado ninguna compra.</Typography>
+        ) : (
+          <Paper sx={{ p: 3, borderRadius: 3 }}>
+            <List>
+              {orders.map((order, i) => (
+                <div key={order.id}>
+                  <ListItem>
+                    <ListItemText
+                      primary={order.service?.title || "Servicio desconocido"}
+                      secondary={`Fecha: ${new Date(order.createdAt).toLocaleString()}`}
+                    />
+                    <Chip label={order.status} color="primary" size="small" />
+                  </ListItem>
+                  {i < orders.length - 1 && <Divider />}
+                </div>
+              ))}
+            </List>
+          </Paper>
+        )}
+      </Container>
+      <Footer />
+    </>
   );
 };
 
