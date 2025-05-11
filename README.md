@@ -35,6 +35,7 @@ ALLOWED_INSTITUTIONAL_DOMAINS=bla,bla,bla,bla
 
    * `https://www.postgresql.org/download/`
 
+
    ```bash
    CREATE DATABASE gradlink;
    ```
