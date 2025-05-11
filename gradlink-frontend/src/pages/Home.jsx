@@ -392,8 +392,14 @@ const Home = () => {
           </Box>
           <Box sx={{ display:"flex",gap:2,flexWrap:"wrap",px: 1.9,py: 0.5 }}>
             <TextField label="Usuario" size="small" value={filterUser} onChange={e=>setFilterUser(e.target.value)} sx={{ width: 170 }} />
-            <TextField label="Precio min" type="number" size="small" value={minPrice} onChange={e=>setMinPrice(e.target.value)} sx={{ width: 105 }} />
-            <TextField label="Precio max" type="number" size="small" value={maxPrice} onChange={e=>setMaxPrice(e.target.value)} sx={{ width: 107 }} />
+            <TextField label="Precio min" type="number" size="small" value={minPrice} onChange={e=>setMinPrice(e.target.value)} sx={{ width: 105, '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
+              WebkitAppearance: 'none',
+              margin: 0,
+            } }} />
+            <TextField label="Precio max" type="number" size="small" value={maxPrice} onChange={e=>setMaxPrice(e.target.value)} sx={{ width: 107, '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
+              WebkitAppearance: 'none',
+              margin: 0,
+            } }} />
             <TextField label="Población" size="small" value={locationFilter} onChange={e=>setLocationFilter(e.target.value)} sx={{ width: 170 }}/>
             <Button 
             sx={{ borderRadius: '99px', color: '#f0c987', borderColor: '#f0c987', "&:hover": {
