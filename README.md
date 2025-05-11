@@ -79,7 +79,7 @@ ALLOWED_INSTITUTIONAL_DOMAINS=array,de,instituciones,permitidas,urv.cat
 
 ## Pruébalo
 
-* Abre el navegador en `http://localhost:3000` para ver la capa *Home*.
+* Abre el navegador en `http://localhost:3000` para ver la página *Home*.
 * Regístrate y crea pedidos.
 * Para probar pagos con Stripe, utiliza la tarjeta de prueba:
   ```text
@@ -87,4 +87,4 @@ ALLOWED_INSTITUTIONAL_DOMAINS=array,de,instituciones,permitidas,urv.cat
   ```
 * Los demas datos pueden ser inventados pero deben ser validos.
 
-¡A jugar! 🎉
+¡A jugar!
