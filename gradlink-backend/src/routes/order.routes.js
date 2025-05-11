@@ -7,25 +7,6 @@ const orderRoutes = (dataSource) => {
   const cartRepo = dataSource.getRepository("CartItem");
   const userRepo = dataSource.getRepository("User");
 
-  // Crear nuevo pedido
-  router.post("/", async (req, res) => {
-    const { serviceId } = req.body;
-    const user = req.user; // Requiere que authMiddleware lo haya seteado
-
-    try {
-      const order = orderRepo.create({
-        service: { id: serviceId },
-        user: { id: user.id },
-        status: "processing"
-      });
-      const saved = await orderRepo.save(order);
-      res.status(201).json(saved);
-    } catch (err) {
-      console.log(err);
-      res.status(400).json({ error: "No se pudo crear el pedido" });
-    }
-  });
-
   // Obtener pedidos del usuario autenticado
   router.get("/mine", async (req, res) => {
     const user = req.user;

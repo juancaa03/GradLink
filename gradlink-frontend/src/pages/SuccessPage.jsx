@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import {
@@ -15,7 +15,13 @@ const SuccessPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Ref to ensure confirmOrder is only called once
+  const hasConfirmed = useRef(false);
+
   useEffect(() => {
+    if (hasConfirmed.current) return;
+    hasConfirmed.current = true;
+
     const confirmOrder = async () => {
       try {
         const res = await fetch("http://localhost:4000/api/orders/confirm", {
@@ -24,6 +30,7 @@ const SuccessPage = () => {
             Authorization: `Bearer ${token}`,
           },
         });
+
         if (!res.ok) throw new Error("Error al confirmar la compra");
         await res.json();
       } catch (err) {
